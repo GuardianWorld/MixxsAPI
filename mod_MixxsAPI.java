@@ -34,7 +34,7 @@ public class mod_MixxsAPI extends BaseMod {
 
     public mod_MixxsAPI(){
     	//Initializing the other APIs;
-    	System.out.println("Mixxs API Initializing...");
+    	System.out.println("> Mixxs API Initializing...");
     	itemAPI = new MixxsAPI_ItemAPI();
         //inputFormatException = new Properties();
         try {
