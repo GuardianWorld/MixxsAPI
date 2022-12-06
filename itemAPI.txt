@@ -1,0 +1,51 @@
+#
+#			LootAPI Config, be careful touching here.
+#	
+#		ItemList = Necessary for every item that will be added to be placed here, it will be used to call the rest.
+#		idItem"ItemListName": Will select the ItemID for said item.
+#		Texture"ItemListName": Will show the path for said item texture. (Its minecraft canonicalPath + /config) Per default the texture used is the PlaceHolder.
+#		Type"ItemListName": Will determine the type to be added. Currently we have:
+#		SetMaxStack"ItemListName": Will set the max stack size for said item. Only works for certain cases.
+#		SetName"ItemListName": To place the FULL name of the object.
+#		- Item (Resource)
+#		To do: - Pickaxe, Spade, Sword, Hoe, Food, Bucket, Door.
+#
+#		Another point to note, is that mods can use the ItemAPI to quickly add items (Just sending their own ConfigFile to the
+#		LootAPI and receiving the ItemTable).
+#
+#		For now this is just a reference file;
+#
+#
+#ItemList = banana,kiwi,knife
+#idItembanana = 420
+#Texturebanana = /textures/banana.png
+#Typebanana = Item
+#SetMaxStackbanana = 64
+#SetNamebanana = Banana
+#
+
+ItemList = banana,kiwi,knife,helicoptero,noIDTest
+
+idItembanana = 420
+Texturebanana = /textures/banana.png
+Typebanana = Item
+SetMaxStackbanana = 64
+SetNamebanana = Banana
+
+idItemkiwi = 421
+Texturekiwi = /textures/banana.png
+Typekiwi = Item
+SetMaxStackkiwi = 64
+SetNamekiwi = Kiwi Fruit
+
+idItemknife = 422
+Typeknife = Items
+Textureknife = /textures/knife.png
+SetNameknife = Military Knife
+SetMaxStackknife = 1
+
+idItemhelicoptero = 423
+Texturehelicoptero = /textures/helicoptero.png
+Typehelicoptero = Item
+SetMaxStackhelicoptero = 1
+SetNamehelicoptero = Helicoptero
