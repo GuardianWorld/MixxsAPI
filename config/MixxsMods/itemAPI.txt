@@ -28,21 +28,24 @@ ItemList = banana,kiwi,knife,helicoptero,noIDTest
 
 idItembanana = 420
 Texturebanana = /textures/banana.png
-Typebanana = Item
-SetMaxStackbanana = 64
+Typebanana = Food
+SetMaxStackbanana = 6
+FoodHealAmountbanana = 3
 SetNamebanana = Banana
 
 idItemkiwi = 421
-Texturekiwi = /textures/banana.png
-Typekiwi = Item
-SetMaxStackkiwi = 64
+Texturekiwi = /textures/kiwi.png
+Typekiwi = Food
+SetMaxStackkiwi = 1
+FoodHealAmountkiwi = 4
 SetNamekiwi = Kiwi Fruit
 
 idItemknife = 422
-Typeknife = Items
+Typeknife = Sword
 Textureknife = /textures/knife.png
-SetNameknife = Military Knife
+SetNameknife = Hell Knife
 SetMaxStackknife = 1
+ItemEnumTypeknife = IRON
 
 idItemhelicoptero = 423
 Texturehelicoptero = /textures/helicoptero.png
