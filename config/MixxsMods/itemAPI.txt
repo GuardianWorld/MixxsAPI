@@ -25,7 +25,15 @@
 #
 
 ItemList = banana,kiwi,knife,helicoptero,noIDTest
+EnumList = glass
 
+#Enum Materials
+MaterialSetHLevelglass = 0
+MaterialSetMUsesglass = 5
+MaterialSetEOPMglass = 0
+MaterialSetDVEglass = 5
+
+#Items
 idItembanana = 420
 Texturebanana = /textures/banana.png
 Typebanana = Food
@@ -45,7 +53,7 @@ Typeknife = Sword
 Textureknife = /textures/knife.png
 SetNameknife = Hell Knife
 SetMaxStackknife = 1
-ItemEnumTypeknife = IRON
+ItemEnumTypeknife = glass
 
 idItemhelicoptero = 423
 Texturehelicoptero = /textures/helicoptero.png
