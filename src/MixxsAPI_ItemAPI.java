@@ -11,34 +11,50 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
+
 public class MixxsAPI_ItemAPI {
     private static int defaultTextureIndex = 0;
-    private static int defaultID = 600;
-    private static int idIncrements;
+    private static int defaultID = 3200;
+    private static int idIncrements = 0;
     private static String[] itemTypeArray = {"item", "axe" ,"pickaxe", "spade", "shovel", "sword", "spade", "hoe", "food", "bucket", "door", "seeds"};
+    public static Map<String,EnumToolMaterial> materialList = new HashMap<String,EnumToolMaterial>();
     
     Properties inputFormatException;
     
     public MixxsAPI_ItemAPI(){
     	 String defaultTexturePath = "/textures/NoTexture.png";
-    	 defaultTextureIndex = ModLoader.addOverride("/gui/items.png", defaultTexturePath);
-    	 MixxsAPI_ItemAPI.idIncrements = 0;
+    	 defaultTextureIndex = ModLoader.addOverride("/gui/items.png", defaultTexturePath);    	 
     	 inputFormatException = new Properties();
+    	 
+    	 MixxsAPI_ItemAPI.addEnumToMaterialMap("wood", EnumToolMaterial.WOOD);
+    	 MixxsAPI_ItemAPI.addEnumToMaterialMap("stone", EnumToolMaterial.STONE);
+    	 MixxsAPI_ItemAPI.addEnumToMaterialMap("iron", EnumToolMaterial.IRON);
+    	 MixxsAPI_ItemAPI.addEnumToMaterialMap("diamond", EnumToolMaterial.EMERALD);
+    	 MixxsAPI_ItemAPI.addEnumToMaterialMap("emerald", EnumToolMaterial.EMERALD);
+    	 MixxsAPI_ItemAPI.addEnumToMaterialMap("gold", EnumToolMaterial.GOLD);
+    	 
     }
     
-    public boolean ItemAPICalls(String modConfigPath, ArrayList<Item> modItemTable){    	    	
+    public boolean ItemAPICalls(String modConfigPath, ArrayList<Item> modItemTable, Map<String,Integer> textureMap){    	    	
     	
     	System.out.println("> Mixxs [ItemAPI] called, making ItemList and Building Items...");
     	
     	//HashMap to allow the same texturePath to be used by multiple Items.
-    	Map<String,Integer> tempTextureMap = new HashMap<String,Integer>();
+    	if(textureMap == null) {
+    		textureMap = new HashMap<String,Integer>();
+    	}
     	
-        String[] split;
+        String[] splitItemList = {};
+        String[] splitEnumList = {};
         try{
             File file = new File(mod_MixxsAPI.configpath + modConfigPath);
             inputFormatException.load(new InputStreamReader(new FileInputStream(file)));
-            String itemList = inputFormatException.getProperty("ItemList");
-            split = itemList.split(",");
+            String itemList = inputFormatException.getProperty("ItemList", null);
+            String enumList = inputFormatException.getProperty("MaterialList", null);
+            
+            if(itemList != null) { splitItemList = itemList.split(","); }
+            if(enumList != null) { splitEnumList = enumList.split(","); }
 			//rarity = Integer.valueOf(numberformatexception.getProperty("rarity")).intValue();
         }
         catch(IOException fileNotFoundException3){
@@ -46,7 +62,27 @@ public class MixxsAPI_ItemAPI {
             return false;
         }
         
-        for(String s : split){
+        //Advanced Option: Enum List.
+    	if(mod_MixxsAPI.additionalFunctionalityMods.get(0).equals("net.minecraft.src.overrideapi.OverrideAPI")) {
+    		for(String materialName: splitEnumList) {
+    			System.out.println("> [ItemAPI]: Obtaining Tool Material " + materialName + ".");
+    			int materialHarvestLevel = TryGettingValues(("MaterialSetHLevel" + materialName), 0);
+    			int materialMaxUses = TryGettingValues(("MaterialSetMUses" + materialName), 59);
+    			float materialEfficiencyOnProperMaterial = TryGettingValues(("MaterialSetEOPM" + materialName), 2.0F);
+    			int materialDamageVsEntity = TryGettingValues(("MaterialSetDVE" + materialName), 0);
+        		MixxsAPI_ItemAPI.addEnumToMaterialMap(
+        				materialName,
+        				materialHarvestLevel,
+        				materialMaxUses,
+        				materialEfficiencyOnProperMaterial,
+        				materialDamageVsEntity);
+    		}
+        }
+        
+        
+        
+        //If File with Strings is found.
+        for(String s : splitItemList){
         	System.out.println("> [ItemAPI]: Obtaining Item " + s + ".");
             
             //Get initial values
@@ -55,10 +91,10 @@ public class MixxsAPI_ItemAPI {
             String type = TryGettingItemType("Type" + s);
             String name = inputFormatException.getProperty("SetName" + s, s); 
             int stackSize = 1;
+            
             EnumToolMaterial enumMaterial = EnumToolMaterial.STONE;
             if(checkItemTypeRedux(type).equals("Equipament")) {
             	enumMaterial = TryGettingEnumMaterial("ItemEnumType" + s);
-            	
             }
             else {
             	stackSize = TryGettingValues(("SetMaxStack" + s), 1);
@@ -83,16 +119,10 @@ public class MixxsAPI_ItemAPI {
             		enumMaterial,	  //EnumMaterial Type.
             		foodHealAmount,   //Food heal amount
             		foodWolfFavorite, //Is it wolfy's favorite?
-            		tempTextureMap    //TextureHash map for repeated textures, not obligatory.
+            		textureMap    //TextureHash map for repeated textures, not obligatory.
             		);
-
-            modItemTable.add(auxItem);      
-            if(id == 600 + idIncrements) {
-            	MixxsAPI_ItemAPI.idIncrements++;
-            }
             
-            
-            
+            modItemTable.add(auxItem);    
         }
         return true;
     }
@@ -103,6 +133,13 @@ public class MixxsAPI_ItemAPI {
     	
         Item aux = null;        
        
+        while(Item.itemsList[256 + id] != null) {
+			System.err.println("> [ItemAPI] Warning: Item ["+ baseName +"] with id " + id
+					+ " Conflict with [" + Item.itemsList[256 + id].getItemName() + "] Trying to change ID");
+			idIncrements++;
+			id += idIncrements;
+		}     
+        
         //Set individual characteristics.
         if(type.equals("item")){
             aux = (new Item(id)).setMaxStackSize(stackSize);   
@@ -140,7 +177,7 @@ public class MixxsAPI_ItemAPI {
         
         ModLoader.AddName(aux, fullName);
         return aux;
-    }
+    }  
     
     private String checkItemTypeRedux(String type) {
     	if(type.equals("spade") || type.equals("sword") || type.equals("hoe") || type.equals("pickaxe") || type.equals("axe")) {
@@ -160,7 +197,6 @@ public class MixxsAPI_ItemAPI {
     		return defaultTextureIndex;
         }
     	//If texture exists, check Texture Hash
-    	//If texture exists, check Texture Hash
     	if(textureHash == null) {
     		textureIndex = ModLoader.addOverride("/gui/items.png", texture);
     	}
@@ -177,11 +213,41 @@ public class MixxsAPI_ItemAPI {
     	return textureIndex;
     }
     
+    public static void addEnumToMaterialMap(String enumName, int harvestLevel, int maxUses, float efficiencyOnProperMaterial, int damageVsEntity) {
+    	if(!materialList.containsKey(enumName)) {
+    		materialList.put(enumName.toLowerCase(), 
+    				ToolMaterial.create(enumName.toUpperCase(), harvestLevel, maxUses, efficiencyOnProperMaterial, damageVsEntity));
+    		return;
+    	}   	
+    	System.out.println("[Mixxs API] Warning: enumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.");
+    }
     
+    public static void addEnumToMaterialMap(String enumName, EnumToolMaterial material) {
+    	if(!materialList.containsKey(enumName)) {
+    		materialList.put(enumName.toLowerCase(), material);
+    		return;
+    	}   	
+    	System.out.println("[Mixxs API] Warning: enumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.");
+    }
+    
+    //Tries.
     private int TryGettingValues(String idProperty, int valueDef){
         int value;
         try{
         	value = Integer.valueOf(inputFormatException.getProperty(idProperty)).intValue();
+        }
+        catch(Exception numberFormatException5){
+            System.err.println("> [ItemAPI] Error: Invalid value for: " + idProperty + ". Using default value ["+valueDef+"].");
+            return valueDef;
+        }    
+        
+        return value;
+    }
+    
+    private float TryGettingValues(String idProperty, float valueDef){
+        float value;
+        try{
+        	value = Float.valueOf(inputFormatException.getProperty(idProperty)).floatValue();
         }
         catch(Exception numberFormatException5){
             System.err.println("> [ItemAPI] Error: Invalid value for: " + idProperty + ". Using default value ["+valueDef+"].");
@@ -197,13 +263,12 @@ public class MixxsAPI_ItemAPI {
     		System.err.println("> [ItemAPI] Error: No texture for: " + textureProperty + ". Using default texture."); 
     		return null;
     	}
-    	try{
-    		BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(image)));
+    	if(getClass().getResourceAsStream(image) != null) {
     		return image;
-    	} catch (Exception e) {
-    		System.err.println("> [ItemAPI] Error: Invalid texture for: " + textureProperty + ". Using default texture");
-    		return null;
-		}
+    	}
+    	
+    	System.err.println("> [ItemAPI] Error: Invalid texture for: " + textureProperty + ". Using default texture");
+		return null;
     }
     
     private String TryGettingItemType(String typeProperty) {
@@ -232,20 +297,8 @@ public class MixxsAPI_ItemAPI {
     	
     	String aux = inputFormatException.getProperty(materialProperty, "N/A").toLowerCase();
     	
-    	if(aux.equals("wood")) {
-    		return EnumToolMaterial.WOOD;
-    	}
-    	if(aux.equals("stone")) {
-    		return EnumToolMaterial.STONE;
-    	}
-    	if(aux.equals("iron")) {
-    		return EnumToolMaterial.IRON;
-    	}
-    	if(aux.equals("diamond") || aux.equals("emerald")) {
-    		return EnumToolMaterial.EMERALD;
-    	}
-    	if(aux.equals("gold")) {
-    		return EnumToolMaterial.GOLD;
+    	if(materialList.containsKey(aux)){
+    		return materialList.get(aux);
     	}
     	
     	System.err.println("> [ItemAPI] Error: Invalid MaterialType for: " + materialProperty + ". Using default value [STONE].");

@@ -19,24 +19,28 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
+//import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+//import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 
 public class mod_MixxsAPI extends BaseMod {
-    public static ArrayList<Item> ItemTable = new ArrayList<>();
+	
+	protected static ArrayList<String> additionalFunctionalityMods;
+    public static ArrayList<Item> itemTable = new ArrayList<>();
     public static String configpath;
     private static Properties inputFormatException;
-    private static int defaultTexture;
     
     //APIs
     MixxsAPI_ItemAPI itemAPI;
 
     public mod_MixxsAPI(){
-    	//Initializing the other APIs;
-    	System.out.println("> Mixxs API Initializing...");
-    	itemAPI = new MixxsAPI_ItemAPI();
-        //inputFormatException = new Properties();
+    	//Initializing itself
+    	System.out.println("> [Mixxs API]: Initializing ...");
+    	
+    	inputFormatException = new Properties();
+    	additionalFunctionalityMods = new ArrayList<>();  	
         try {
 			configpath = Minecraft.getMinecraftDir().getCanonicalPath() + "/config/";
 			configpath = configpath.replace("\\", "/");
@@ -44,9 +48,33 @@ public class mod_MixxsAPI extends BaseMod {
         catch (IOException e) {
 			e.printStackTrace();
 		}
-        itemAPI.ItemAPICalls("MixxsMods/itemAPI.txt", ItemTable);
+        
+        System.out.println("> [Mixxs API]: Initializing APIs...");
+    	//Initializing the other APIs;
+    	itemAPI = new MixxsAPI_ItemAPI();
+        
+        
+        //Try checking if supported mods that add other functions are enabled or not is on or not.
+        checkAdditionalFunctionalityMods();
+        
+        itemAPI.ItemAPICalls("MixxsMods/itemAPI.txt", itemTable, null);
     }
 
+    private void checkAdditionalFunctionalityMods() {
+    	checkEspecificModsExistence("net.minecraft.src.overrideapi.OverrideAPI", "EnumToolMaterials");
+    }
+    
+    private boolean checkEspecificModsExistence(String className, String functions) {
+    	try {
+			Class.forName(className, false, this.getClass().getClassLoader());
+			additionalFunctionalityMods.add(className); 
+		} catch (ClassNotFoundException e) {
+			System.err.println("> [MixxsAPI] Warning: Could not find class [" + className + "]. Some additional functions [" + functions + "] will not work");
+			additionalFunctionalityMods.add("NotFound");
+		}
+    	return false;
+    }
+    
     public String Version() {
 		return "Mixxs API v0.1 for Minecraft B1.7.3";
 	}
