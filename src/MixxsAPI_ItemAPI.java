@@ -16,12 +16,21 @@ import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 public class MixxsAPI_ItemAPI {
     private static int defaultTextureIndex = 0;
     private static int defaultID = 3200;
+    private static int defaultSetID = 6600;
     private static int idIncrements = 0;
-    private static String[] itemTypeArray = {"item", "axe" ,"pickaxe", "spade", "shovel", "sword", "spade", "hoe", "food", "bucket", "door", "seeds"};
+    private static String[] itemTypeArray = 
+    	   {"item", //Items
+    		"axe" ,	"pickaxe", "spade",	"shovel", "sword",	"hoe", //Equipments
+    		"food", // Food
+    		"armor", // Armor
+    		"bucket",
+    		"door",
+    		"seeds",
+    		"soup" };
     public static Map<String,EnumToolMaterial> materialList = new HashMap<String,EnumToolMaterial>();
     
     Properties inputFormatException;
-    
+     
     public MixxsAPI_ItemAPI(){
     	 String defaultTexturePath = "/textures/NoTexture.png";
     	 defaultTextureIndex = ModLoader.addOverride("/gui/items.png", defaultTexturePath);    	 
@@ -37,97 +46,341 @@ public class MixxsAPI_ItemAPI {
     }
     
     public boolean ItemAPICalls(String modConfigPath, ArrayList<Item> modItemTable, Map<String,Integer> textureMap){    	    	
-    	
+    	 
     	System.out.println("> Mixxs [ItemAPI] called, making ItemList and Building Items...");
+    	
+    	String materialList; //Materials
+    	String itemList; //Normal Items
+    	String foodList, soupList; //Food Items
+    	String swordList, pickaxeList, shovelList, axeList, hoeList; //Equipament Items
+    	String equipSetList; //Equipament Set
+    	String armorList, advArmorList; //Armor Items
     	
     	//HashMap to allow the same texturePath to be used by multiple Items.
     	if(textureMap == null) {
     		textureMap = new HashMap<String,Integer>();
     	}
-    	
-        String[] splitItemList = {};
-        String[] splitEnumList = {};
+
         try{
             File file = new File(mod_MixxsAPI.configpath + modConfigPath);
             inputFormatException.load(new InputStreamReader(new FileInputStream(file)));
-            String itemList = inputFormatException.getProperty("ItemList", null);
-            String enumList = inputFormatException.getProperty("MaterialList", null);
-            
-            if(itemList != null) { splitItemList = itemList.split(","); }
-            if(enumList != null) { splitEnumList = enumList.split(","); }
-			//rarity = Integer.valueOf(numberformatexception.getProperty("rarity")).intValue();
         }
         catch(IOException fileNotFoundException3){
             System.err.println("> [ItemAPI] Error: Invalid File, ItemAPI is now quitting.");
             return false;
         }
+        //Get Properties.
+        materialList = inputFormatException.getProperty("MaterialList", "");
+        
+        itemList     = inputFormatException.getProperty("ItemList", "");
+        foodList     = inputFormatException.getProperty("FoodList", "");
+        soupList     = inputFormatException.getProperty("SoupList", "");
+        swordList    = inputFormatException.getProperty("SwordList", "");
+        pickaxeList  = inputFormatException.getProperty("PickaxeList", "");
+        shovelList   = inputFormatException.getProperty("ShovelList", "");
+        axeList      = inputFormatException.getProperty("AxeList", "");
+        hoeList      = inputFormatException.getProperty("HoeList", "");
+        equipSetList = inputFormatException.getProperty("FullEquipamentSetList", "");
+        
+        armorList = inputFormatException.getProperty("ArmorList", "");
+        advArmorList = inputFormatException.getProperty("AdvancedArmorList", "");       
         
         //Advanced Option: Enum List.
-    	if(mod_MixxsAPI.additionalFunctionalityMods.get(0).equals("net.minecraft.src.overrideapi.OverrideAPI")) {
-    		for(String materialName: splitEnumList) {
-    			System.out.println("> [ItemAPI]: Obtaining Tool Material " + materialName + ".");
-    			int materialHarvestLevel = TryGettingValues(("MaterialSetHLevel" + materialName), 0);
-    			int materialMaxUses = TryGettingValues(("MaterialSetMUses" + materialName), 59);
-    			float materialEfficiencyOnProperMaterial = TryGettingValues(("MaterialSetEOPM" + materialName), 2.0F);
-    			int materialDamageVsEntity = TryGettingValues(("MaterialSetDVE" + materialName), 0);
-        		MixxsAPI_ItemAPI.addEnumToMaterialMap(
-        				materialName,
-        				materialHarvestLevel,
-        				materialMaxUses,
-        				materialEfficiencyOnProperMaterial,
-        				materialDamageVsEntity);
-    		}
+        if(!materialList.isEmpty()){ 
+        	String[] splitMaterialList = materialList.split(","); 
+        	addMaterialToEnumMaterialsList(splitMaterialList);	
+        }
+        if(!itemList.isEmpty()){ 
+        	String[] splitItemList = itemList.split(",");
+        	addDefaultItemToGame(splitItemList, modItemTable, textureMap);  	
+        }
+        if(!foodList.isEmpty()) {
+        	String[] splitFoodList = foodList.split(",");
+        	addFoodItemToGame(splitFoodList, modItemTable, textureMap);
+        }
+        if(!soupList.isEmpty()) {
+        	String[] splitSoupList = soupList.split(",");
+        }
+        if(!equipSetList.isEmpty()) {
+        	String[] splitSetList = equipSetList.split(",");
+        	addSetToGame(splitSetList, modItemTable, textureMap);
+        }
+        if(!swordList.isEmpty()) {
+        	String[] splitSwordList = swordList.split(",");
+        	addEquipamentToGame(splitSwordList, "sword",modItemTable, textureMap);
+        }
+        if(!pickaxeList.isEmpty()) {
+        	String[] splitPickaxeList = pickaxeList.split(",");
+        	addEquipamentToGame(splitPickaxeList, "pickaxe",modItemTable, textureMap);
+        }
+        if(!shovelList.isEmpty()) {
+        	String[] splitShovelList = shovelList.split(",");
+        	addEquipamentToGame(splitShovelList, "spade",modItemTable, textureMap);
+        }
+        if(!axeList.isEmpty()) {
+        	String[] splitAxeList = axeList.split(",");
+        	addEquipamentToGame(splitAxeList, "axe",modItemTable, textureMap);
+        }
+        if(!hoeList.isEmpty()) {
+        	String[] splitHoeList = hoeList.split(",");
+        	addEquipamentToGame(splitHoeList, "hoe",modItemTable, textureMap);
         }
         
+        if(armorList != null && !armorList.isEmpty()){ 
+        	String[] splitArmorList = armorList.split(",");
         
+        }
+        if(advArmorList != null && !advArmorList.isEmpty()) {
+        	String[] splitAdvArmorList = advArmorList.split(","); 
+        
+        }
         
         //If File with Strings is found.
-        for(String s : splitItemList){
-        	System.out.println("> [ItemAPI]: Obtaining Item " + s + ".");
-            
-            //Get initial values
-            int id = TryGettingValues(("idItem" + s), defaultID) + idIncrements;
-            String texture = TryGettingTexture("Texture" + s);
-            String type = TryGettingItemType("Type" + s);
-            String name = inputFormatException.getProperty("SetName" + s, s); 
-            int stackSize = 1;
-            
-            EnumToolMaterial enumMaterial = EnumToolMaterial.STONE;
-            if(checkItemTypeRedux(type).equals("Equipament")) {
-            	enumMaterial = TryGettingEnumMaterial("ItemEnumType" + s);
-            }
-            else {
-            	stackSize = TryGettingValues(("SetMaxStack" + s), 1);
-            }
-            
-            int foodHealAmount = 1;
-            boolean foodWolfFavorite = false;
-            if(checkItemTypeRedux(type).equals("Food")){
-            	foodHealAmount = TryGettingValues(("FoodHealAmount" + s), 1);
-            	foodWolfFavorite = TryGettingFavoriteFoodWolf(("FoodWolfFavorite" + s));
-            }
-            
-            
-            //Call the building calls;
-            Item auxItem = ItemAPIbuildItem(
-            		s, 				  //base name
-            		name,			  //full name
-            		id, 			  //Item ID
-            		texture,		  //Texture
-            		type,			  //Item Type
-            		stackSize,		  //Stack size
-            		enumMaterial,	  //EnumMaterial Type.
-            		foodHealAmount,   //Food heal amount
-            		foodWolfFavorite, //Is it wolfy's favorite?
-            		textureMap    //TextureHash map for repeated textures, not obligatory.
-            		);
-            
-            modItemTable.add(auxItem);    
-        }
+        //addItemsToGame(splitItemList, modItemTable, textureMap);
+        
         return true;
     }
     
-    public Item ItemAPIbuildItem(String baseName, String fullName, int id, String texture, String type, int stackSize, 
+    private void addMaterialToEnumMaterialsList(String[] splitMaterialList) {
+    	if(splitMaterialList.length > 0) {
+    		if(mod_MixxsAPI.additionalFunctionalityMods.get(0).equals("net.minecraft.src.overrideapi.OverrideAPI")) {
+        		for(String materialName: splitMaterialList) {
+        			System.out.println("> [ItemAPI]: Obtaining Tool Material " + materialName + ".");
+        			int materialHarvestLevel = TryGettingValues(("MaterialSetHarverstLevel" + materialName), 0);
+        			int materialMaxUses = TryGettingValues(("MaterialSetMaxUses" + materialName), 59);
+        			float materialEfficiencyOnProperMaterial = TryGettingValues(("MaterialSetEfficiencyOnProperMaterial" + materialName), 2.0F);
+        			int materialDamageVsEntity = TryGettingValues(("MaterialSetDamageVsEntity" + materialName), 0);
+            		MixxsAPI_ItemAPI.addEnumToMaterialMap(
+            				materialName,
+            				materialHarvestLevel,
+            				materialMaxUses,
+            				materialEfficiencyOnProperMaterial,
+            				materialDamageVsEntity);
+        		}
+        	}
+    		else {
+    			System.out.println("> [ItemAPI]: Could not find OverrideAPI. Will not be able to create custom ENUM items.");
+    		}
+    	}
+    }
+    
+    /**
+     * Adds a Item into a Item Table.
+     */
+    private void addDefaultItemToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
+    	for(String baseName : splitList) {
+    		System.out.println("> [ItemAPI]: Obtaining Default Item " + baseName + ".");
+    		
+    		//Get initial values, common to all of the items.
+    		ArrayList<Object> defaultValues = TryGettingCommonItemValues(baseName, false);
+
+            Item auxItem = ItemAPIbuildDefaultItem(
+            		baseName,
+            		(String)defaultValues.get(0), //fullName
+            		(Integer)defaultValues.get(1), //ID
+            		(String)defaultValues.get(2), //Texture
+            		(Integer)defaultValues.get(3), //StackSize
+            		textureMap
+            		);	
+
+            modItemTable.add(auxItem);
+    	}
+    }
+    
+    /**
+     * Adds a food Item into a Item Table.
+     */
+    private void addFoodItemToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
+    	for(String baseName : splitList) {
+    		System.out.println("> [ItemAPI]: Obtaining Default Item " + baseName + ".");
+    		
+    		//Get initial values, common to all of the items.
+    		ArrayList<Object> defaultValues = TryGettingCommonItemValues(baseName, false);
+    		int foodHealAmount = TryGettingValues(("FoodHealAmount" + baseName), 1);
+        	boolean foodWolfFavorite = TryGettingFavoriteFoodWolf(("FoodWolfFavorite" + baseName));
+ 
+        	Item auxItem = ItemAPIbuildFoodItem(
+            		baseName,
+            		(String)defaultValues.get(0), //fullName
+            		(Integer)defaultValues.get(1), //ID
+            		(String)defaultValues.get(2), //Texture
+            		(Integer)defaultValues.get(3), //StackSize
+            		foodHealAmount,
+            		foodWolfFavorite,
+            		textureMap
+            		);	
+            modItemTable.add(auxItem);
+    	}
+    }
+    
+    private void addSetToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String, Integer> textureMap) {
+    	for(String baseName : splitList) {
+    		System.out.println("> [ItemAPI]: Obtaining Set " + baseName + ".");
+    		//Separates set into wanted resources;
+    		int reservedID = TryGettingValues(("idReservedSet" + baseName), defaultSetID) + idIncrements;
+    		EnumToolMaterial enumTypeMaterial = TryGettingEnumMaterial("SetEnumType" + baseName);
+    		String textureSetBase = inputFormatException.getProperty("TextureSet" + baseName, "");
+    		String[] SetBaseTypes = {
+    				"Sword",
+    				"Axe",
+    				"Pickaxe",
+    				"Hoe",
+    				"Shovel"
+    		};
+    		String[] textureSet = {
+    				TryGettingTextureRedux(textureSetBase.replace("#", "Sword")),
+    				TryGettingTextureRedux(textureSetBase.replace("#", "Axe")),
+    				TryGettingTextureRedux(textureSetBase.replace("#", "Pickaxe")),
+    				TryGettingTextureRedux(textureSetBase.replace("#", "Hoe")),
+    				TryGettingTextureRedux(textureSetBase.replace("#", "Shovel"))};
+    		String[] nameSet = {
+    				inputFormatException.getProperty("SetName" + baseName + "Sword", baseName + "Sword"),
+    				inputFormatException.getProperty("SetName" + baseName + "Axe", baseName + "Axe"),
+    				inputFormatException.getProperty("SetName" + baseName + "Pickaxe", baseName + "Pickaxe"),
+    				inputFormatException.getProperty("SetName" + baseName + "Hoe", baseName + "Hoe"),
+    				inputFormatException.getProperty("SetName" + baseName + "Shovel", baseName + "Shovel")
+    		};
+    		
+    		for(int x = 0; x < 5; x++) {
+    			Item auxItem = ItemAPIBuildEquipament(
+                		baseName + SetBaseTypes[x],
+                		nameSet[x], //fullName
+                		reservedID + x, //ID
+                		textureSet[x], //Texture
+                		1, //StackSize
+                		SetBaseTypes[x],
+                		enumTypeMaterial,
+                		textureMap
+                		);		
+    			modItemTable.add(auxItem);
+    		}
+    	}
+    }
+    
+    private void addEquipamentToGame(String[] splitList, String type, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
+    	for(String baseName : splitList) {
+    		System.out.println("> [ItemAPI]: Obtaining Default Item " + baseName + ".");
+    		
+    		//Get initial values, common to all of the items.
+    		ArrayList<Object> defaultValues = TryGettingCommonItemValues(baseName, true);
+    		EnumToolMaterial enumTypeMaterial = TryGettingEnumMaterial("ItemEnumType" + baseName);
+    		
+    		
+            Item auxItem = ItemAPIBuildEquipament(
+            		baseName,
+            		(String)defaultValues.get(0), //fullName
+            		(Integer)defaultValues.get(1), //ID
+            		(String)defaultValues.get(2), //Texture
+            		(Integer)defaultValues.get(3), //StackSize
+            		type,
+            		enumTypeMaterial,
+            		textureMap
+            		);	
+
+            modItemTable.add(auxItem);
+    	}
+    }
+    
+    
+    
+    //Public API Calls, Use them if you wish to build an item manually using this system.
+    
+    public static Item ItemAPIbuildDefaultItem(String baseName, String fullName, int id, String texture, int stackSize, Map<String, Integer> textureHashMap) {
+    	System.out.println("> [ItemAPI]: Building Default Item " + baseName + ".");
+    	Item aux = null;
+    	
+    	//Get an EmptyID;
+       	while(Item.itemsList[256 + id] != null) {
+    		System.err.println("> [ItemAPI] Warning: Item ["+ baseName +"] with id " + id
+    				+ " Conflict with [" + Item.itemsList[256 + id].getItemName() + "] Trying to change ID");
+    		idIncrements++;
+    		id += idIncrements;
+    	}   
+    	
+    	//Register Item
+    	aux = (new Item(id)).setMaxStackSize(stackSize);
+    	
+        //Set the Name
+        aux.setItemName(baseName);
+        
+        //Set Texture
+        aux.setIconIndex(getTextureIndex(texture,baseName, textureHashMap));  
+        
+        //Add Name via ModLoader
+        ModLoader.AddName(aux, fullName);
+        return aux;
+    	
+    }
+    
+    public static Item ItemAPIbuildFoodItem(String baseName, String fullName, int id, String texture, int stackSize, 
+    		int foodHealAmount, boolean foodWolfFavorite, Map<String, Integer> textureHashMap) {
+    	System.out.println("> [ItemAPI]: Building Food Item " + baseName + ".");
+    	Item aux = null;
+    	
+    	//Get an EmptyID;
+       	while(Item.itemsList[256 + id] != null) {
+    		System.err.println("> [ItemAPI] Warning: Item ["+ baseName +"] with id " + id
+    				+ " Conflict with [" + Item.itemsList[256 + id].getItemName() + "] Trying to change ID");
+    		idIncrements++;
+    		id += idIncrements;
+    	}   
+    	
+    	//Register Item
+    	aux = (new ItemFood(id, foodHealAmount, foodWolfFavorite)).setMaxStackSize(stackSize);
+    	
+        //Set the Name
+        aux.setItemName(baseName);
+        
+        //Set Texture
+        aux.setIconIndex(getTextureIndex(texture,baseName, textureHashMap));  
+        
+        //Add Name via ModLoader
+        ModLoader.AddName(aux, fullName);
+    	return aux;
+    }
+    
+    public static Item ItemAPIBuildEquipament(String baseName, String fullName, int id, String texture, 
+    		int stackSize, String type, EnumToolMaterial enumTypeMaterial, Map<String, Integer> textureHashMap) {
+    	
+    	System.out.println("> [ItemAPI]: Building Equipament " + baseName + ".");
+    	
+    	Item aux = null;
+    	
+    	//Get an EmptyID;
+       	while(Item.itemsList[256 + id] != null) {
+    		System.err.println("> [ItemAPI] Warning: Item ["+ baseName +"] with id " + id
+    				+ " Conflict with [" + Item.itemsList[256 + id].getItemName() + "] Trying to change ID");
+    		idIncrements++;
+    		id += idIncrements;
+    	}   
+    	
+    	if(type.toLowerCase().equals("axe")) {
+        	aux = (new ItemAxe(id, enumTypeMaterial));
+        }
+        else if(type.toLowerCase().equals("pickaxe")){
+        	aux = (new ItemPickaxe(id, enumTypeMaterial));
+        }
+        else if(type.toLowerCase().equals("spade") || type.toLowerCase().equals("shovel")){
+        	aux = (new ItemSpade(id, enumTypeMaterial));
+        }
+        else if(type.toLowerCase().equals("sword")){
+        	aux = (new ItemSword(id, enumTypeMaterial));
+        }
+        else if(type.toLowerCase().equals("hoe")){
+        	aux = (new ItemHoe(id, enumTypeMaterial));
+        }
+    	
+    	//Set the Name
+        aux.setItemName(baseName);
+        
+        //Set Texture
+        aux.setIconIndex(getTextureIndex(texture,baseName, textureHashMap));  
+        
+        ModLoader.AddName(aux, fullName);
+        return aux;
+	}
+    
+    public static Item ItemAPIbuildItem(String baseName, String fullName, int id, String texture, String type, int stackSize, 
     		EnumToolMaterial enumTypeMaterial, int healAmount, boolean wolfFavorite , Map<String, Integer> textureHash){
     	System.out.println("> [ItemAPI]: Building Item " + baseName + ".");
     	
@@ -178,6 +431,27 @@ public class MixxsAPI_ItemAPI {
         ModLoader.AddName(aux, fullName);
         return aux;
     }  
+
+    public static void addEnumToMaterialMap(String enumName, int harvestLevel, int maxUses, float efficiencyOnProperMaterial, int damageVsEntity) {
+    	System.out.println("> [ItemAPI]: Building Material " + enumName + ".");
+    	if(!materialList.containsKey(enumName)) {
+    		materialList.put(enumName.toLowerCase(), 
+    				ToolMaterial.create(enumName.toUpperCase(), harvestLevel, maxUses, efficiencyOnProperMaterial, damageVsEntity));
+    		return;
+    	}   	
+    	System.out.println("[Mixxs API] Warning: enumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.");
+    }
+    
+    public static void addEnumToMaterialMap(String enumName, EnumToolMaterial material) {
+    	if(!materialList.containsKey(enumName)) {
+    		materialList.put(enumName.toLowerCase(), material);
+    		return;
+    	}   	
+    	System.out.println("[Mixxs API] Warning: enumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.");
+    }
+    
+    
+    
     
     private String checkItemTypeRedux(String type) {
     	if(type.equals("spade") || type.equals("sword") || type.equals("hoe") || type.equals("pickaxe") || type.equals("axe")) {
@@ -190,7 +464,7 @@ public class MixxsAPI_ItemAPI {
     }
     
     
-    private int getTextureIndex(String texture,String name,Map<String, Integer> textureHash) {
+    private static int getTextureIndex(String texture,String name,Map<String, Integer> textureHash) {
         //If texture is null
     	int textureIndex;
     	if(texture == null) {
@@ -212,29 +486,16 @@ public class MixxsAPI_ItemAPI {
     	}
     	return textureIndex;
     }
-    
-    public static void addEnumToMaterialMap(String enumName, int harvestLevel, int maxUses, float efficiencyOnProperMaterial, int damageVsEntity) {
-    	if(!materialList.containsKey(enumName)) {
-    		materialList.put(enumName.toLowerCase(), 
-    				ToolMaterial.create(enumName.toUpperCase(), harvestLevel, maxUses, efficiencyOnProperMaterial, damageVsEntity));
-    		return;
-    	}   	
-    	System.out.println("[Mixxs API] Warning: enumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.");
-    }
-    
-    public static void addEnumToMaterialMap(String enumName, EnumToolMaterial material) {
-    	if(!materialList.containsKey(enumName)) {
-    		materialList.put(enumName.toLowerCase(), material);
-    		return;
-    	}   	
-    	System.out.println("[Mixxs API] Warning: enumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.");
-    }
+
     
     //Tries.
     private int TryGettingValues(String idProperty, int valueDef){
         int value;
         try{
         	value = Integer.valueOf(inputFormatException.getProperty(idProperty)).intValue();
+        	if(value < 0) {
+        		throw new Exception();
+        	}
         }
         catch(Exception numberFormatException5){
             System.err.println("> [ItemAPI] Error: Invalid value for: " + idProperty + ". Using default value ["+valueDef+"].");
@@ -248,6 +509,9 @@ public class MixxsAPI_ItemAPI {
         float value;
         try{
         	value = Float.valueOf(inputFormatException.getProperty(idProperty)).floatValue();
+        	if(value < 0) {
+        		throw new Exception();
+        	}
         }
         catch(Exception numberFormatException5){
             System.err.println("> [ItemAPI] Error: Invalid value for: " + idProperty + ". Using default value ["+valueDef+"].");
@@ -255,6 +519,31 @@ public class MixxsAPI_ItemAPI {
         }    
         
         return value;
+    }
+    
+    private ArrayList<Object> TryGettingCommonItemValues(String baseName, boolean isEquipament){
+    	int id = TryGettingValues(("idItem" + baseName), defaultID) + idIncrements;
+        String texture = TryGettingTexture("Texture" + baseName);
+        String fullName = inputFormatException.getProperty("SetName" + baseName, baseName);
+        int stackSize = 1;
+        if(!isEquipament) {
+        	stackSize = TryGettingValues(("SetMaxStack" + baseName), 1);
+        }
+        ArrayList<Object> aux = new ArrayList<>();
+        aux.add(fullName);
+        aux.add(id);
+        aux.add(texture);
+        aux.add(stackSize);
+        return aux;//String fullName, int id, String texture, int stackSize,
+    }
+    
+    private String TryGettingTextureRedux(String texture) {
+    	if(getClass().getResourceAsStream(texture) != null) {
+    		return texture;
+    	}
+    	
+    	System.err.println("> [ItemAPI] Error: Invalid texture for: " + texture + ". Using default texture");
+		return null;
     }
     
     private String TryGettingTexture(String textureProperty) {
