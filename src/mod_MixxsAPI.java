@@ -19,18 +19,21 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.MixxsAPI.EntityCustomList;
 //import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
+import net.minecraft.src.MixxsAPI.MixxsAPI_ItemAPI;
+import net.minecraft.src.MixxsAPI.Items.ItemEntityEgg;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 //import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 
 public class mod_MixxsAPI extends BaseMod {
-	
-	protected static ArrayList<String> additionalFunctionalityMods;
+	public static ArrayList<String> additionalFunctionalityMods;
     public static ArrayList<Item> itemTable = new ArrayList<>();
     public static String configpath;
     private static Properties inputFormatException;
+    EntityCustomList entityList;
     
     //APIs
     MixxsAPI_ItemAPI itemAPI;
@@ -51,12 +54,15 @@ public class mod_MixxsAPI extends BaseMod {
         
         System.out.println("> [Mixxs API]: Initializing APIs...");
     	//Initializing the other APIs;
+        //Entity API
+        entityList = new EntityCustomList();
+        
     	itemAPI = new MixxsAPI_ItemAPI();
         
         
         //Try checking if supported mods that add other functions are enabled or not is on or not.
         checkAdditionalFunctionalityMods();
-        
+
         itemAPI.ItemAPICalls("MixxsMods/itemAPI.txt", itemTable, null);
     }
 
