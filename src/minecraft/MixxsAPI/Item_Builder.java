@@ -9,7 +9,7 @@ import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.Item;
 import net.minecraft.src.ModLoader;
 import MixxsAPI.Items.*;
-import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
+import overrideapi.utils.tool.ToolMaterial;
 
 public class Item_Builder {
 	
@@ -178,6 +178,7 @@ public class Item_Builder {
     	if(!materialList.containsKey(enumName)) {
     		materialList.put(enumName.toLowerCase(), 
     				ToolMaterial.create(enumName.toUpperCase(), harvestLevel, maxUses, efficiencyOnProperMaterial, damageVsEntity));
+    		
     		return;
     	}   	
     	MLogger.print("Item API", "EnumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.", MLogger.WARNING);

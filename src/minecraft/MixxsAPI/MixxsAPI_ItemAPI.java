@@ -21,7 +21,6 @@ import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_MixxsAPI;
 import MixxsAPI.Items.*;
-import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 
 public class MixxsAPI_ItemAPI {
 	//public static Item monsterEgg = (new ItemEntityEgg(9000)).setItemName("item.entity.egg.name");
@@ -169,7 +168,7 @@ public class MixxsAPI_ItemAPI {
     
     private void addMaterialToEnumMaterialsList(String[] splitMaterialList) {
     	if(splitMaterialList.length > 0) {
-    		if(mod_MixxsAPI.additionalFunctionalityMods.get(0).equals("net.minecraft.src.overrideapi.OverrideAPI")) {
+    		if(!mod_MixxsAPI.additionalFunctionalityMods.get(0).equals("NotFound")) {
         		for(String materialName: splitMaterialList) {
         	    	MLogger.print("Item API", "Obtaining Tool Material " + materialName + ".", MLogger.NORMAL);
         			
