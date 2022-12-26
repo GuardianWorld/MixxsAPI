@@ -4,13 +4,21 @@ A collection of tools made by myself to help me mod Minecraft Beta 1.7.3.
 Simply helps with stuff.
 
 So far done:
+
 MixxsAPI     - V0.1a (Proof of concept)
+
 ItemAPI      - V0.2a (Check bellow:)
+
 RecipeAPI    - N/A
+
 LootTableAPI - N/A
+
 EntityAPI    - N/A
+
 StructureAPI - N/A
+
 Others       - N/A
+
 
 ## ItemAPI:
   It is possible to create items via a .txt file and simply placing the textures inside the MixxsAPI.zip file, instead of needing to code the items in.
