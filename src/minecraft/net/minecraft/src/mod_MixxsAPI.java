@@ -19,10 +19,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.MixxsAPI.EntityCustomList;
+import MixxsAPI.*; 
 //import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
-import net.minecraft.src.MixxsAPI.MixxsAPI_ItemAPI;
-import net.minecraft.src.MixxsAPI.Items.ItemEntityEgg;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -66,19 +64,20 @@ public class mod_MixxsAPI extends BaseMod {
     }
 
     private void checkAdditionalFunctionalityMods() {
-    	checkEspecificModsExistence("net.minecraft.src.overrideapi.OverrideAPI", "EnumToolMaterials");
-    	checkEspecificModsExistence("net.minecraft.src.DirtSwordLoader", "3D models using .obj");
+
+    	//checkEspecificModsExistence("net.minecraft.src.overrideapi.OverrideAPI", "EnumToolMaterials", false);
+    	checkEspecificModsExistence("overrideapi.OverrideAPI", "EnumToolMaterials");
+    	//checkEspecificModsExistence("net.minecraft.src.DirtSwordLoader", "3D models using .obj");
     }
     
-    private boolean checkEspecificModsExistence(String className, String functions) {
+    private void checkEspecificModsExistence(String className, String functions) {
     	try {
 			Class.forName(className, false, this.getClass().getClassLoader());
 			additionalFunctionalityMods.add(className); 
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {	
 			System.err.println("> [MixxsAPI] Warning: Could not find class [" + className + "]. Some additional functions [" + functions + "] will not work");
 			additionalFunctionalityMods.add("NotFound");
 		}
-    	return false;
     }
     
     public String Version() {
