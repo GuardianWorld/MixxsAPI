@@ -133,6 +133,10 @@ public class MixxsAPI_ItemAPI {
         
         //Armor Items
         String armorSetList	= inputFormatException.getProperty("ArmorSetList", "");
+        String helmetList 	= inputFormatException.getProperty("ArmorHelmetList", "");
+        String chestList    = inputFormatException.getProperty("ArmorChestList", "");
+        String legsList     = inputFormatException.getProperty("ArmorLegsList", "");
+        String bootsList    = inputFormatException.getProperty("ArmorBootsList", "");
         
         //Advanced Option: Enum List.
         if(!materialList.isEmpty()) 	{ addMaterialToEnumMaterialsList(materialList.split(",")); 			  		   			  	}
@@ -152,6 +156,10 @@ public class MixxsAPI_ItemAPI {
         if(!BReplacerList.isEmpty())	{ addBlockReplacerToGame(BReplacerList.split(","), modItemTable, textureMap);               }
         
         if(!armorSetList.isEmpty())		{ addArmorSetToGame(armorSetList.split(","), modItemTable, textureMap);						}
+        if(!helmetList.isEmpty()) 		{ addArmorToGame(helmetList.split(","), ItemCustomArmor.HELMET, modItemTable, textureMap);	}
+        if(!chestList.isEmpty()) 		{ addArmorToGame(chestList.split(","), ItemCustomArmor.CHESTPLATE, modItemTable, textureMap);	}
+        if(!legsList.isEmpty()) 		{ addArmorToGame(legsList.split(","), ItemCustomArmor.LEGGINGS, modItemTable, textureMap);	}
+        if(!bootsList.isEmpty()) 		{ addArmorToGame(bootsList.split(","), ItemCustomArmor.BOOTS, modItemTable, textureMap);	}
         //Items with special conditions, such as return type, will be placed last:
         if(!soupList.isEmpty()) 		{ addSoupItemToGame(soupList.split(","), modItemTable, textureMap);        					}  
         if(!bowList.isEmpty())      	{ addBowToGame(bowList.split(","), modItemTable, textureMap);                       		}
