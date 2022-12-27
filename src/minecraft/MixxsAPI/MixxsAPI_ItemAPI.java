@@ -1,22 +1,17 @@
 package MixxsAPI;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import hmi.TabUtils;
-import hmi.Utils;
 import net.minecraft.src.Block;
 import net.minecraft.src.EnumToolMaterial;
 import net.minecraft.src.Item;
-import net.minecraft.src.ItemBow;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.mod_MixxsAPI;
@@ -57,10 +52,9 @@ public class MixxsAPI_ItemAPI {
     private final String I_ArmorLevel           = "ArmorLevel_";
     private final String I_RenderIndex			= "RenderIndex_";
     private final String I_DamageReduceAmount   = "DamageReduceAmount_";
-    
-    
+
+
     public MixxsAPI_ItemAPI(){
-    	  
     	 inputFormatException = new Properties();
     	 
     	 Item_Builder.addEnumToMaterialMap("wood", EnumToolMaterial.WOOD);
@@ -79,27 +73,26 @@ public class MixxsAPI_ItemAPI {
     	 
     	 //ModLoader.AddName(monsterEgg, "Default Egg");
     	 //ModLoader.AddLocalization("item.null.egg.name", "Default Egg");
-    	 
-    	 }
+	}
+
     //Map<String, Item> modItemTable
-    public boolean ItemAPICalls(String modConfigPath, ArrayList<Item> modItemTable, Map<String,Integer> textureMap){    	    	
-    	 
-    	MLogger.print("Item API", "called.", MLogger.NORMAL);
+    public boolean ItemAPICalls(String modConfigPath, ArrayList<Item> modItemTable, Map<String,Integer> textureMap){
+    	MLogger.print("Item API", "called.", MLogger.ErrorType.NORMAL);
     	
     	//HashMap to allow the same texturePath to be used by multiple Items.
     	if(textureMap == null) {
-    		textureMap = new HashMap<String,Integer>();
+    		textureMap = new HashMap<>();
     	}
+
         try{
             File file = new File(mod_MixxsAPI.configpath + modConfigPath);
             inputFormatException.load(new InputStreamReader(new FileInputStream(file)));
-        }
-        catch(IOException fileNotFoundException3){
-        	MLogger.print("Item API", "Invalid File, ItemAPI is now quitting.", MLogger.ERROR);
+        } catch(IOException fileNotFoundException3){
+        	MLogger.print("Item API", "Invalid File, ItemAPI is now quitting.", MLogger.ErrorType.ERROR);
             return false;
         }
         
-        MLogger.print("ItemAPI", "making ItemList and Building Items...", MLogger.NORMAL);
+        MLogger.print("ItemAPI", "making ItemList and Building Items...", MLogger.ErrorType.NORMAL);
         
         //## Get Properties.
         //Materials
@@ -111,8 +104,8 @@ public class MixxsAPI_ItemAPI {
         String foodList     = inputFormatException.getProperty("FoodList", "");
         String soupList     = inputFormatException.getProperty("SoupList", "");
        
-        //Equipament Items
-        String equipSetList = inputFormatException.getProperty("FullEquipamentSetList", ""); //Equipament Set
+        //Equipment Items
+        String equipSetList = inputFormatException.getProperty("FullEquipmentSetList", ""); //Equipment Set
         String swordList    = inputFormatException.getProperty("SwordList", "");
         String pickaxeList  = inputFormatException.getProperty("PickaxeList", "");
         String shovelList   = inputFormatException.getProperty("ShovelList", "");
@@ -138,30 +131,30 @@ public class MixxsAPI_ItemAPI {
         String bootsList    = inputFormatException.getProperty("ArmorBootsList", "");
         
         //Advanced Option: Enum List.
-        if(!materialList.isEmpty()) 	{ addMaterialToEnumMaterialsList(materialList.split(",")); 			  		   			  	}
-        if(!armorLayerList.isEmpty()) 	{ addArmorLayerToList(armorLayerList.split(","));							 				}
-        if(!itemList.isEmpty())     	{ addDefaultItemToGame(itemList.split(","), modItemTable, textureMap);		   			  	}
-        if(!foodList.isEmpty())     	{ addFoodItemToGame(foodList.split(","), modItemTable, textureMap);   		   			  	}
-        if(!equipSetList.isEmpty())		{ addEquipamentSetToGame(equipSetList.split(","), modItemTable, textureMap);  	 		  	}
-        if(!swordList.isEmpty())    	{ addEquipamentToGame(swordList.split(","), "sword",modItemTable, textureMap); 			  	}
-        if(!pickaxeList.isEmpty())  	{ addEquipamentToGame(pickaxeList.split(","), "pickaxe",modItemTable, textureMap);  	  	}
-        if(!shovelList.isEmpty())   	{ addEquipamentToGame(shovelList.split(","), "spade",modItemTable, textureMap);    	      	}
-        if(!axeList.isEmpty()) 			{ addEquipamentToGame(axeList.split(","), "axe",modItemTable, textureMap);          	  	}
-        if(!hoeList.isEmpty()) 			{ addEquipamentToGame(hoeList.split(","), "hoe",modItemTable, textureMap);	        	  	}     
-        if(!doorList.isEmpty()) 		{ String[] splitDoorList = doorList.split(",");								       	      	}
-        if(!shearList.isEmpty())    	{ addShearsToGame(shearList.split(","), modItemTable, textureMap);						  	}
-        if(!FSteelList.isEmpty())   	{ addBlockPlacerToGame(FSteelList.split(","), "flintAndSteel", modItemTable, textureMap); 	}
-        if(!BPlacerList.isEmpty())  	{ addBlockPlacerToGame(BPlacerList.split(","), "blockPlacer", modItemTable, textureMap); 	}
-        if(!BReplacerList.isEmpty())	{ addBlockReplacerToGame(BReplacerList.split(","), modItemTable, textureMap);               }
+        if(!materialList.isEmpty()) 	addMaterialToEnumMaterialsList(materialList.split(","));
+        if(!armorLayerList.isEmpty()) 	addArmorLayerToList(armorLayerList.split(","));
+        if(!itemList.isEmpty())     	addDefaultItemToGame(itemList.split(","), modItemTable, textureMap);
+        if(!foodList.isEmpty())     	addFoodItemToGame(foodList.split(","), modItemTable, textureMap);
+        if(!equipSetList.isEmpty())		addEquipamentSetToGame(equipSetList.split(","), modItemTable, textureMap);
+        if(!swordList.isEmpty())    	addEquipamentToGame(swordList.split(","), "sword",modItemTable, textureMap);
+        if(!pickaxeList.isEmpty())  	addEquipamentToGame(pickaxeList.split(","), "pickaxe",modItemTable, textureMap);
+        if(!shovelList.isEmpty())   	addEquipamentToGame(shovelList.split(","), "spade",modItemTable, textureMap);
+        if(!axeList.isEmpty()) 			addEquipamentToGame(axeList.split(","), "axe",modItemTable, textureMap);
+        if(!hoeList.isEmpty()) 			addEquipamentToGame(hoeList.split(","), "hoe",modItemTable, textureMap);
+        if(!doorList.isEmpty()) 		{ String[] splitDoorList = doorList.split(","); }
+        if(!shearList.isEmpty())    	addShearsToGame(shearList.split(","), modItemTable, textureMap);
+        if(!FSteelList.isEmpty())   	addBlockPlacerToGame(FSteelList.split(","), "flintAndSteel", modItemTable, textureMap);
+        if(!BPlacerList.isEmpty())  	addBlockPlacerToGame(BPlacerList.split(","), "blockPlacer", modItemTable, textureMap);
+        if(!BReplacerList.isEmpty())	addBlockReplacerToGame(BReplacerList.split(","), modItemTable, textureMap);
         
-        if(!armorSetList.isEmpty())		{ addArmorSetToGame(armorSetList.split(","), modItemTable, textureMap);						}
-        if(!helmetList.isEmpty()) 		{ addArmorToGame(helmetList.split(","), ItemCustomArmor.HELMET, modItemTable, textureMap);	}
-        if(!chestList.isEmpty()) 		{ addArmorToGame(chestList.split(","), ItemCustomArmor.CHESTPLATE, modItemTable, textureMap);	}
-        if(!legsList.isEmpty()) 		{ addArmorToGame(legsList.split(","), ItemCustomArmor.LEGGINGS, modItemTable, textureMap);	}
-        if(!bootsList.isEmpty()) 		{ addArmorToGame(bootsList.split(","), ItemCustomArmor.BOOTS, modItemTable, textureMap);	}
+        if(!armorSetList.isEmpty())		addArmorSetToGame(armorSetList.split(","), modItemTable, textureMap);
+        if(!helmetList.isEmpty()) 		addArmorToGame(helmetList.split(","), ItemCustomArmor.HELMET, modItemTable, textureMap);
+        if(!chestList.isEmpty()) 		addArmorToGame(chestList.split(","), ItemCustomArmor.CHESTPLATE, modItemTable, textureMap);
+        if(!legsList.isEmpty()) 		addArmorToGame(legsList.split(","), ItemCustomArmor.LEGGINGS, modItemTable, textureMap);
+        if(!bootsList.isEmpty()) 		addArmorToGame(bootsList.split(","), ItemCustomArmor.BOOTS, modItemTable, textureMap);
         //Items with special conditions, such as return type, will be placed last:
-        if(!soupList.isEmpty()) 		{ addSoupItemToGame(soupList.split(","), modItemTable, textureMap);        					}  
-        if(!bowList.isEmpty())      	{ addBowToGame(bowList.split(","), modItemTable, textureMap);                       		}
+        if(!soupList.isEmpty()) 		addSoupItemToGame(soupList.split(","), modItemTable, textureMap);
+        if(!bowList.isEmpty())      	addBowToGame(bowList.split(","), modItemTable, textureMap);
         
         return true;
     }
@@ -170,11 +163,11 @@ public class MixxsAPI_ItemAPI {
     	if(splitMaterialList.length > 0) {
     		if(!mod_MixxsAPI.additionalFunctionalityMods.get(0).equals("NotFound")) {
         		for(String materialName: splitMaterialList) {
-        	    	MLogger.print("Item API", "Obtaining Tool Material " + materialName + ".", MLogger.NORMAL);
+        	    	MLogger.print("Item API", "Obtaining Tool Material " + materialName + ".", MLogger.ErrorType.NORMAL);
         			
         	    	Item_Builder.addEnumToMaterialMap(
             			materialName,
-            			TryGettingValues(("MaterialSetHarverstLevel_" + materialName), 0),
+            			TryGettingValues(("MaterialSetHarvestLevel_" + materialName), 0),
             			TryGettingValues(("MaterialSetMaxUses_" + materialName), 69),
             			TryGettingValues(("MaterialSetEfficiencyOnProperMaterial_" + materialName), 2.0F),
             			TryGettingValues(("MaterialSetDamageVsEntity_" + materialName), 0)
@@ -182,7 +175,7 @@ public class MixxsAPI_ItemAPI {
         		}
         	}
     		else {
-    			MLogger.print("Item API", "Could not find OverrideAPI. Will not be able to create custom ENUM items. ", MLogger.ERROR);
+    			MLogger.print("Item API", "Could not find OverrideAPI. Will not be able to create custom ENUM items. ", MLogger.ErrorType.ERROR);
     		}
     	}
     }
@@ -198,7 +191,7 @@ public class MixxsAPI_ItemAPI {
      */
     private void addDefaultItemToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
     	for(String baseName : splitList) {
-    		//MLogger.print("Item API", "Obtaining Default Item " + baseName + ".", MLogger.NORMAL);
+    		//MLogger.ErrorType.print("Item API", "Obtaining Default Item " + baseName + ".", MLogger.ErrorType.NORMAL);
 
             Item auxItem = Item_Builder.ItemAPIBuildDefaultItem(
             		baseName,
@@ -207,7 +200,7 @@ public class MixxsAPI_ItemAPI {
             		TryGettingTexture(I_Texture + baseName),
             		TryGettingValues((I_SetMaxStack + baseName), 1),
             		textureMap
-            		);	
+            		);
 
             modItemTable.add(auxItem);
     	}
@@ -218,7 +211,7 @@ public class MixxsAPI_ItemAPI {
      */
     private void addFoodItemToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
     	for(String baseName : splitList) {
-    		//MLogger.print("Item API", "Obtaining Food Item " + baseName + ".", MLogger.NORMAL); 
+    		//MLogger.ErrorType.print("Item API", "Obtaining Food Item " + baseName + ".", MLogger.ErrorType.NORMAL);
  
         	Item auxItem = Item_Builder.ItemAPIBuildFoodItem(
             		baseName,
@@ -229,14 +222,15 @@ public class MixxsAPI_ItemAPI {
             		TryGettingValues((I_FoodHealAmount + baseName), 1),
             		TryGettingFavoriteFoodWolf(I_FoodWolfFavorite + baseName),
             		textureMap
-            		);	
+            		);
+
             modItemTable.add(auxItem);
     	}
     }
     
     private void addSoupItemToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
     	for(String baseName : splitList) {
-    		//MLogger.print("Item API", "Obtaining Soup Item " + baseName + ".", MLogger.NORMAL);
+    		//MLogger.ErrorType.print("Item API", "Obtaining Soup Item " + baseName + ".", MLogger.ErrorType.NORMAL);
         	
         	Item auxItem = Item_Builder.ItemAPIBuildSoupItem(
             		baseName,
@@ -255,7 +249,7 @@ public class MixxsAPI_ItemAPI {
     
     private void addEquipamentSetToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String, Integer> textureMap) {
     	for(String baseName : splitList) {
-    		//MLogger.print("Item API", "Obtaining Set " + baseName + ".", MLogger.NORMAL);
+    		//MLogger.ErrorType.print("Item API", "Obtaining Set " + baseName + ".", MLogger.ErrorType.NORMAL);
     		//Separates set into wanted resources;
     		int reservedID = TryGettingValues((I_reservedToolSetID + baseName), defaultSetID) + idIncrements;
     		EnumToolMaterial enumTypeMaterial = TryGettingEnumMaterial(I_SetEnumType + baseName);
@@ -299,7 +293,7 @@ public class MixxsAPI_ItemAPI {
     
     private void addEquipamentToGame(String[] splitList, String type, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
     	for(String baseName : splitList) {
-    		//MLogger.print("Item API", "Obtaining Equipament " + baseName + ".", MLogger.NORMAL);	
+    		//MLogger.ErrorType.print("Item API", "Obtaining Equipament " + baseName + ".", MLogger.ErrorType.NORMAL);
     		
             Item auxItem = Item_Builder.ItemAPIBuildEquipament(
             		baseName,
@@ -356,22 +350,17 @@ public class MixxsAPI_ItemAPI {
     }
     
     private void addBlockPlacerToGame(String[] splitList, String type, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
-    	
-    	for(String baseName : splitList) { 		
-           
+    	for(String baseName : splitList) {
     		int BlockID;
     		String defaultSound = "fire.ignite";
+
     		if(type.equals("flintAndSteel")) {
     			defaultSound = "fire.ignite";
     			BlockID = GetBlockID(inputFormatException.getProperty(I_SetBlock + baseName, ""), Block.fire.blockID, false);
-    		}
-    		else {
+    		} else {
     			defaultSound = "step.step";
     			BlockID = GetBlockID(inputFormatException.getProperty(I_SetBlock + baseName, ""), Block.fire.blockID, true);
     		}
-    		
-    		
-    		
     		
     	   Item auxItem = Item_Builder.ItemAPIBuildBlockPlacer(
     			   baseName,
@@ -379,18 +368,17 @@ public class MixxsAPI_ItemAPI {
     			   TryGettingValues((I_setID + baseName), defaultID) + idIncrements,
     			   TryGettingTexture(I_Texture + baseName),
     			   TryGettingValues(I_SetDurability + baseName, 32),
-    			   BlockID,//BlockID
-    			   defaultSound,//inputFormatException.getProperty("SetSound" + baseName, defaultSound),//Sound
+    			   BlockID, //BlockID
+    			   defaultSound, //inputFormatException.getProperty("SetSound" + baseName, defaultSound),//Sound
     			   textureMap
-           );	
+           );
+
            modItemTable.add(auxItem);     	
     	}
     }
     
     private void addBlockReplacerToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
-    	
-    	for(String baseName : splitList) { 		
-           
+    	for(String baseName : splitList) {
     		String SetForbiddenToReplaceBlocks = inputFormatException.getProperty((I_ForbiddenBlocks + baseName), "");
     		String[] split = null;
     		if(!SetForbiddenToReplaceBlocks.isEmpty()) {
@@ -413,7 +401,6 @@ public class MixxsAPI_ItemAPI {
 
     private void addArmorSetToGame(String[] splitList, ArrayList<Item> modItemTable, Map<String, Integer> textureMap) {
     	for(String baseName : splitList) {
-
     		//Separates set into wanted resources;
     		int reservedID = TryGettingValues((I_reservedArmorSetID + baseName), defaultSetID) + idIncrements;
     		String textureSetBase = inputFormatException.getProperty(I_SetTextureArmor + baseName, "");
@@ -476,7 +463,7 @@ public class MixxsAPI_ItemAPI {
     
     private void addArmorToGame(String[] splitList, int type, ArrayList<Item> modItemTable, Map<String,Integer> textureMap) {
     	for(String baseName : splitList) {
-    		//MLogger.print("Item API", "Obtaining Equipament " + baseName + ".", MLogger.NORMAL);	
+    		//MLogger.ErrorType.print("Item API", "Obtaining Equipament " + baseName + ".", MLogger.ErrorType.NORMAL);
     		
     		inputFormatException.getProperty(I_RenderIndex + baseName, "cloth");
     		
@@ -509,9 +496,7 @@ public class MixxsAPI_ItemAPI {
             modItemTable.add(auxItem);
     	 */
     }
-    
-    
-    
+
     //Tries.
     private int TryGettingValues(String valueProperty, int valueDef){
         int value;
@@ -520,7 +505,7 @@ public class MixxsAPI_ItemAPI {
         	if(value < 0) {	throw new Exception(); }
         }
         catch(Exception numberFormatException5){
-        	MLogger.print("Item API", "Invalid value for: " + valueProperty + ". Using default value ["+valueDef+"].", MLogger.ERROR);
+        	MLogger.print("Item API", "Invalid value for: " + valueProperty + ". Using default value ["+valueDef+"].", MLogger.ErrorType.ERROR);
             return valueDef;
         }    
         
@@ -529,26 +514,23 @@ public class MixxsAPI_ItemAPI {
     
     private int TryGettingValuesNoError(String valueProperty, int valueDef) {
     	int value;
-        try{
+        try {
         	value = Integer.valueOf(inputFormatException.getProperty(valueProperty)).intValue();
-        	if(value < 0) {	throw new Exception(); }
-        }
-        catch(Exception numberFormatException5){
+        	if(value < 0) throw new Exception();
+        } catch(Exception numberFormatException5) {
             return valueDef;
         }    
         
         return value;
     }
-    
-    
+
     private float TryGettingValues(String valueProperty, float valueDef){
         float value;
-        try{
+        try {
         	value = Float.valueOf(inputFormatException.getProperty(valueProperty)).floatValue();
-        	if(value < 0) {	throw new Exception(); }
-        }
-        catch(Exception numberFormatException5){
-        	MLogger.print("Item API", "Invalid value for: " + valueProperty + ". Using default value ["+valueDef+"].", MLogger.ERROR);
+        	if(value < 0) throw new Exception();
+        } catch(Exception numberFormatException5) {
+        	MLogger.print("Item API", "Invalid value for: " + valueProperty + ". Using default value ["+valueDef+"].", MLogger.ErrorType.ERROR);
             return valueDef;
         }    
         
@@ -559,20 +541,20 @@ public class MixxsAPI_ItemAPI {
     	if(getClass().getResourceAsStream(texture) != null) { 
     		return texture; 
     	}  	
-    	MLogger.print("Item API", "Invalid texture for: " + texture + ". Using default texture", MLogger.ERROR);
+    	MLogger.print("Item API", "Invalid texture for: " + texture + ". Using default texture", MLogger.ErrorType.ERROR);
 		return null;
     }
     
     private String TryGettingTexture(String textureProperty) {
     	String image = inputFormatException.getProperty(textureProperty, null);
     	if(image == null) {
-    		MLogger.print("Item API", "No texture for: " + textureProperty + ". Using default texture.", MLogger.ERROR);
+    		MLogger.print("Item API", "No texture for: " + textureProperty + ". Using default texture.", MLogger.ErrorType.ERROR);
     		return null;
     	}
     	if(getClass().getResourceAsStream(image) != null) {
     		return image;
     	}
-    	MLogger.print("Item API", "Invalid texture for: " + textureProperty + ". Using default texture", MLogger.ERROR);
+    	MLogger.print("Item API", "Invalid texture for: " + textureProperty + ". Using default texture", MLogger.ErrorType.ERROR);
 		return null;
     }
     
@@ -582,12 +564,11 @@ public class MixxsAPI_ItemAPI {
     }
     
     private EnumToolMaterial TryGettingEnumMaterial(String materialProperty) {
-    	
     	String aux = inputFormatException.getProperty(materialProperty, "N/A").toLowerCase();   	
     	if(Item_Builder.materialList.containsKey(aux)){
     		return Item_Builder.materialList.get(aux);
     	}
-    	MLogger.print("Item API", "Invalid MaterialType for: " + materialProperty + ". Using default value [STONE].", MLogger.ERROR);
+    	MLogger.print("Item API", "Invalid MaterialType for: " + materialProperty + ". Using default value [STONE].", MLogger.ErrorType.ERROR);
     	return EnumToolMaterial.STONE;
     }
     
@@ -596,7 +577,7 @@ public class MixxsAPI_ItemAPI {
     	if(Item_Builder.armorLayerList.containsKey(aux)) {
     		return Item_Builder.armorLayerList.get(aux);
     	}
-    	MLogger.print("Item API", "Invalid ArmorLayer for: " + renderIndex + ". Using default value [CHAINMAIL].", MLogger.ERROR);
+    	MLogger.print("Item API", "Invalid ArmorLayer for: " + renderIndex + ". Using default value [CHAINMAIL].", MLogger.ErrorType.ERROR);
     	return 1;
     }
     
@@ -611,7 +592,7 @@ public class MixxsAPI_ItemAPI {
     			return Item.itemsList[x];
     		}	
     	}  	
-    	MLogger.print("Item API", "Invalid Return Item: " + itemName + ". Using default value ["+ defaultItem.getItemName() +"].", MLogger.ERROR);
+    	MLogger.print("Item API", "Invalid Return Item: " + itemName + ". Using default value ["+ defaultItem.getItemName() +"].", MLogger.ErrorType.ERROR);
     	return Item.itemsList[1];
     }
     
@@ -637,25 +618,24 @@ public class MixxsAPI_ItemAPI {
     	if(auxNames.size() == 0) {
     		ArrayList<Integer> defaultBlockIDs = new ArrayList<>();
         	defaultBlockIDs.add(defaultItem);
-        	MLogger.print("Item API", "No valid block IDs set for "+ itemName +". Using default value ["+ defaultItem +"].", MLogger.ERROR);
+        	MLogger.print("Item API", "No valid block IDs set for "+ itemName +". Using default value ["+ defaultItem +"].", MLogger.ErrorType.ERROR);
         	return defaultBlockIDs;
     	}
     	
     	for(int x = 1; x < Item.itemsList.length; x++) {
-    		for(int y = 0; y < auxNames.size(); y++) {
-        		//System.err.println(auxNames.get(y) + "|" + Item.itemsList[x].getItemName());
-    			if(Item.itemsList[x] != null && Item.itemsList[x].getItemName() != null && Item.itemsList[x].getItemName().equals(auxNames.get(y))){
-        			blockIDs.add(x);
-        			break;
-        		}
-    		}	
+			for (String auxName : auxNames) {
+				//System.err.println(auxNames.get(y) + "|" + Item.itemsList[x].getItemName());
+				if (Item.itemsList[x] != null && Item.itemsList[x].getItemName() != null && Item.itemsList[x].getItemName().equals(auxName)) {
+					blockIDs.add(x);
+					break;
+				}
+			}
     	}
     	//System.err.println(blockIDs);
     	return blockIDs;
     }
     
     private int GetBlockID(String blockName, int defaultBlock, boolean ShouldError) {
-    	
     	if(!blockName.contains("tile.")) {
     		blockName = "tile." + blockName;
     	}
@@ -670,10 +650,11 @@ public class MixxsAPI_ItemAPI {
     			return b.blockID;
     		}
     	}
+
     	if(ShouldError) {
-    		MLogger.print("[Block API]", "Could not find block + " + blockName + " using default block: [" + defaultBlock + "].", MLogger.ERROR);
+    		MLogger.print("[Block API]", "Could not find block + " + blockName + " using default block: [" + defaultBlock + "].", MLogger.ErrorType.ERROR);
     	}
+
     	return defaultBlock;
     }
-    
 }

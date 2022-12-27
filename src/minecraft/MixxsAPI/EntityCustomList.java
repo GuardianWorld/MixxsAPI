@@ -29,16 +29,11 @@ import MixxsAPI.Items.*;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class EntityCustomList{
-	
 	public static Map IDtoClassMapping = new HashMap();
 	public static Map classToStringMapping = new HashMap();
 	private static Map<String, Integer> stringToIDMapping = new HashMap<String, Integer>();
     public static HashMap<Integer, EntityEggInfo> entityEggs = new LinkedHashMap<Integer, EntityEggInfo>();
     public static ArrayList<ItemStack> eggStack = new ArrayList<>();
-    
-    public EntityCustomList() {
-    	
-    }
 
     public static void addMapping(Class entityClass, String EntityName, int id) {
     	stringToIDMapping.put(EntityName, id);
@@ -46,43 +41,35 @@ public class EntityCustomList{
 		IDtoClassMapping.put(id, entityClass);
     }
     
-	public static void addMapping(Class entityClass, String EntityName, int id, int primaryColor, int secondaryColor)
-    {
+	public static void addMapping(Class entityClass, String EntityName, int id, int primaryColor, int secondaryColor) {
 		addMapping(entityClass, EntityName, id);
         entityEggs.put(id, new EntityEggInfo(id, primaryColor, secondaryColor));
         //new ItemStack(MixxsAPI_ItemAPI.monsterEgg, 1, id);
         ModLoader.AddLocalization("item." + EntityName + ".egg.name", EntityName + " Egg");
     }
 	
-	public static Entity createEntityByID(int id, World gameWorld)
-    {
+	public static Entity createEntityByID(int id, World gameWorld) {
         Entity entity = null;
 
-        try
-        {
+        try {
             Class oclass = getClassFromID(id);
 
-            if (oclass != null)
-            {
+            if (oclass != null) {
                 entity = (Entity)oclass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {gameWorld});
             }
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
-        if (entity == null)
-        {
-        	MLogger.print("[Entity API]", "Skipping Entity with ID: " + id, MLogger.WARNING);
+        if (entity == null) {
+        	MLogger.print("[Entity API]", "Skipping Entity with ID: " + id, MLogger.ErrorType.WARNING);
         	//gameWorld.getWorldLogAgent().logWarning("Skipping Entity with id " + id);
         }
 
         return entity;
     }
 
-	 public static String getStringFromID(int entityID)
-	 {
+	 public static String getStringFromID(int entityID) {
 	        Class entityClass = getClassFromID(entityID);
 	        if(entityClass != null) {
 	        	return (String) classToStringMapping.get(entityClass);
@@ -90,10 +77,10 @@ public class EntityCustomList{
 	        return null;
 	 }
 	
-	public static Class getClassFromID(int id)
-    {
+	public static Class getClassFromID(int id) {
         return (Class)IDtoClassMapping.get(id);
     }
+
 	static {
 		addMapping(EntityCreeper.class, "Creeper", 50, 894731, 0);
         addMapping(EntitySkeleton.class, "Skeleton", 51, 12698049, 4802889);
@@ -110,9 +97,5 @@ public class EntityCustomList{
         addMapping(EntityChicken.class, "Chicken", 93, 10592673, 16711680);
         addMapping(EntitySquid.class, "Squid", 94, 2243405, 7375001);
 		addMapping(EntityWolf.class, "Wolf", 95, 14144467, 13545366);
-
-		
 	}
-
-	
 }

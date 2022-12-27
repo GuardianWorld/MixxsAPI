@@ -4,7 +4,6 @@ import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 
 public class CustomItemCoal extends Item{
-	
 	public CustomItemCoal(int id) {
 		super(id);
 		this.setHasSubtypes(true);
