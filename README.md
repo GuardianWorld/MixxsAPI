@@ -30,7 +30,7 @@ Others       - N/A
   * SOUP with custom return items as well~
   * Equipment/Tools (Sword, Axe, Pickaxe, Shovel, Hoe) and a way of creating full equipment sets of a single material very easily.
   * Bows
-  * Shears with custom pickable blocks (Uses a workaround to grab unobtainable items with silk-touch style.)
+  * Shears with custom harvestable blocks (Uses a workaround to grab unobtainable items with silk-touch style.)
   * Armor, with a way of creating a full set as well all at once.
   * Flint and Steel
   * Block Placers (Same code as Flint And Steel really, just with a different sound!)
