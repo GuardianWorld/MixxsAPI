@@ -12,10 +12,9 @@ import MixxsAPI.Items.*;
 import overrideapi.utils.tool.ToolMaterial;
 
 public class Item_Builder {
-	
 	protected static int defaultTextureIndex = ModLoader.addOverride("/gui/items.png", "/textures/NoTexture.png");
-	public static Map<String,EnumToolMaterial> materialList = new HashMap<String,EnumToolMaterial>();
-	public static Map<String, Integer> armorLayerList = new HashMap<String, Integer>();
+	public static Map<String,EnumToolMaterial> materialList = new HashMap<>();
+	public static Map<String, Integer> armorLayerList = new HashMap<>();
 	
 	//Build items:
 	   
@@ -24,7 +23,7 @@ public class Item_Builder {
     //Default Item making is the ID checker.
     public static Item ItemAPIBuildDefaultItem(String baseName, String fullName, int id, String texture, 
     	int stackSize, Map<String, Integer> textureHashMap) {
-		MLogger.print("Item API", "Building Default Item " + baseName + ".", MLogger.NORMAL);	
+		MLogger.print("Item API", "Building Default Item " + baseName + ".", MLogger.ErrorType.NORMAL);
     	
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id); 
@@ -40,7 +39,7 @@ public class Item_Builder {
     
     public static Item ItemAPIBuildFoodItem(String baseName, String fullName, int id, String texture, int stackSize, 
     		int foodHealAmount, boolean foodWolfFavorite, Map<String, Integer> textureHashMap) {
-		MLogger.print("Item API", "Building Food Item " + baseName + ".", MLogger.NORMAL);	
+		MLogger.print("Item API", "Building Food Item " + baseName + ".", MLogger.ErrorType.NORMAL);
     	
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id);
@@ -55,7 +54,7 @@ public class Item_Builder {
     
     public static Item ItemAPIBuildSoupItem(String baseName, String fullName, int id, String texture, int foodHealAmount, 
     		boolean foodWolfFavorite, Item returnItem, Map<String, Integer> textureHashMap) {
-		MLogger.print("Item API", "Building Soup Item " + baseName + ".", MLogger.NORMAL);	
+		MLogger.print("Item API", "Building Soup Item " + baseName + ".", MLogger.ErrorType.NORMAL);
     	
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id);
@@ -70,29 +69,36 @@ public class Item_Builder {
     
     public static Item ItemAPIBuildEquipament(String baseName, String fullName, int id, String texture, 
     		String type, EnumToolMaterial enumTypeMaterial, Map<String, Integer> textureHashMap) {
-		MLogger.print("Item API", "Building Equipament " + baseName + ".", MLogger.NORMAL);	
+		MLogger.print("Item API", "Building Equipament " + baseName + ".", MLogger.ErrorType.NORMAL);
     	Item aux = null;
     	
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id);
-    	
-    	if(type.toLowerCase().equals("axe")){ 
-    		aux = (new ItemCustomAxe(id, enumTypeMaterial).setItemName(baseName));     
-    	}
-        else if(type.toLowerCase().equals("pickaxe")){ 
-        	aux = (new ItemCustomPickaxe(id, enumTypeMaterial).setItemName(baseName)); 
-        }
-        else if(type.toLowerCase().equals("spade") || type.toLowerCase().equals("shovel")){ 
-        	aux = (new ItemCustomSpade(id, enumTypeMaterial).setItemName(baseName));   
-        }
-        else if(type.toLowerCase().equals("sword")){ 
-        	aux = (new ItemCustomSword(id, enumTypeMaterial).setItemName(baseName));   
-        }
-        else if(type.toLowerCase().equals("hoe")){ 
-        	aux = (new ItemCustomHoe(id, enumTypeMaterial).setItemName(baseName));    
-        }
+
+		switch (type.toLowerCase()) {
+			case "axe":
+				aux = (new ItemCustomAxe(id, enumTypeMaterial).setItemName(baseName));
+				break;
+
+			case "pickaxe":
+				aux = (new ItemCustomPickaxe(id, enumTypeMaterial).setItemName(baseName));
+				break;
+
+			case "spade":
+			case "shovel":
+				aux = (new ItemCustomSpade(id, enumTypeMaterial).setItemName(baseName));
+				break;
+
+			case "sword":
+				aux = (new ItemCustomSword(id, enumTypeMaterial).setItemName(baseName));
+				break;
+
+			case "hoe":
+				aux = (new ItemCustomHoe(id, enumTypeMaterial).setItemName(baseName));
+				break;
+		}
         //Set Texture
-        aux.setIconIndex(getTextureIndex(texture,baseName, textureHashMap));  
+		aux.setIconIndex(getTextureIndex(texture,baseName, textureHashMap));
         //Add Name via ModLoader
         ModLoader.AddName(aux, fullName);
         return aux;
@@ -100,7 +106,7 @@ public class Item_Builder {
 
     public static Item ItemAPIBuildBow(String baseName, String fullName, int id, String texture, 
     		int durability, Item consumeItem, Map<String, Integer> textureHashMap) {
-		MLogger.print("Item API", "Building Bow " + baseName + ".", MLogger.NORMAL);	
+		MLogger.print("Item API", "Building Bow " + baseName + ".", MLogger.ErrorType.NORMAL);
     	
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id); 
@@ -111,12 +117,11 @@ public class Item_Builder {
         //Add Name via ModLoader
         ModLoader.AddName(aux, fullName);
         return aux;
-    	
     }
     
     public static Item ItemAPIBuildShears(String baseName, String fullName, int id, String texture, int durability,
     		ArrayList<Integer> blockIDList, Map<String,Integer> textureHashMap) {
-    	MLogger.print("Item API", "Building Shears " + baseName + ".", MLogger.NORMAL);	
+    	MLogger.print("Item API", "Building Shears " + baseName + ".", MLogger.ErrorType.NORMAL);
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id); 
     	//Register Item
@@ -130,7 +135,7 @@ public class Item_Builder {
     
     public static Item ItemAPIBuildBlockPlacer(String baseName, String fullName, int id, String texture, int durability,
     		int blockID, String sound, Map<String,Integer> textureHashMap) {
-    	MLogger.print("Item API", "Building BlockPlacer " + baseName + ".", MLogger.NORMAL);	
+    	MLogger.print("Item API", "Building BlockPlacer " + baseName + ".", MLogger.ErrorType.NORMAL);
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id); 
     	//Register Item
@@ -144,7 +149,7 @@ public class Item_Builder {
     
     public static Item ItemAPIBuildBlockReplacer(String baseName, String fullName, int id, String texture, int durability,
     		int blockID, ArrayList<Integer> replacerListForbidden, Map<String,Integer> textureHashMap) {
-    	MLogger.print("Item API", "Building BlockReplacer " + baseName + ".", MLogger.NORMAL);	
+    	MLogger.print("Item API", "Building BlockReplacer " + baseName + ".", MLogger.ErrorType.NORMAL);
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id); 
     	//Register Item
@@ -158,7 +163,7 @@ public class Item_Builder {
     
     public static Item ItemAPIBuildArmor(String baseName, String fullName, int id, String texture, int durability, int armorLevel,
     		int renderIndex, int armorType, int damageReduceAmount, Map<String,Integer> textureHashMap) {
-    	MLogger.print("Item API", "Building Armor " + baseName + ".", MLogger.NORMAL);	
+    	MLogger.print("Item API", "Building Armor " + baseName + ".", MLogger.ErrorType.NORMAL);
     	//Get an EmptyID;
     	id = getEmptyItemID(baseName, id); 
     	//Register Item
@@ -174,14 +179,16 @@ public class Item_Builder {
     //Adds
     
     public static void addEnumToMaterialMap(String enumName, int harvestLevel, int maxUses, float efficiencyOnProperMaterial, int damageVsEntity) {
-    	MLogger.print("Item API", "Building Material " + enumName + ".", MLogger.NORMAL);
+    	MLogger.print("Item API", "Building Material " + enumName + ".", MLogger.ErrorType.NORMAL);
     	if(!materialList.containsKey(enumName)) {
-    		materialList.put(enumName.toLowerCase(), 
-    				ToolMaterial.create(enumName.toUpperCase(), harvestLevel, maxUses, efficiencyOnProperMaterial, damageVsEntity));
+    		materialList.put(
+					enumName.toLowerCase(),
+					ToolMaterial.create(enumName.toUpperCase(), harvestLevel, maxUses, efficiencyOnProperMaterial, damageVsEntity)
+			);
     		
     		return;
     	}   	
-    	MLogger.print("Item API", "EnumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.", MLogger.WARNING);
+    	MLogger.print("Item API", "EnumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.", MLogger.ErrorType.WARNING);
     }
     
     public static void addEnumToMaterialMap(String enumName, EnumToolMaterial material) {
@@ -189,18 +196,19 @@ public class Item_Builder {
     		materialList.put(enumName.toLowerCase(), material);
     		return;
     	}   	
-    	MLogger.print("Item API", "EnumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.", MLogger.WARNING);
+    	MLogger.print("Item API", "EnumMaterial ["+ enumName.toUpperCase() +"] already exists, not adding.", MLogger.ErrorType.WARNING);
     }
+
     public static void addLayerIndexToLayerMap(String layerName, int index) {
     	if(!armorLayerList.containsKey(layerName)) {
     		armorLayerList.put(layerName, index);	
     	}
-    	return;
     }
+
     private static int getEmptyItemID(String baseName, int id) {
     	if(Item.itemsList[256+id] != null) {
     		MLogger.print("Item API", "Item ["+ baseName +"] with id " + id
-    				+ " Conflicts with [" + Item.itemsList[256 + id].getItemName() + "] Trying to change ID", MLogger.ERROR);	
+    				+ " Conflicts with [" + Item.itemsList[256 + id].getItemName() + "] Trying to change ID", MLogger.ErrorType.ERROR);
     	}
     	while(Item.itemsList[256 + id] != null) {	
     		MixxsAPI_ItemAPI.idIncrements++;
@@ -226,7 +234,7 @@ public class Item_Builder {
     	else {
     		if(textureHash.containsKey(texture)) {
         		textureIndex = textureHash.get(texture);
-        		MLogger.print("Item API", name + " has the same texture as another item, reusing indexNumber.", MLogger.WARNING);
+        		MLogger.print("Item API", name + " has the same texture as another item, reusing indexNumber.", MLogger.ErrorType.WARNING);
         	}
         	else {
             	textureIndex = ModLoader.addOverride("/gui/items.png", texture);
@@ -235,5 +243,4 @@ public class Item_Builder {
     	}
     	return textureIndex;
     }
-	
 }

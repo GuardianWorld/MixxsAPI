@@ -1,29 +1,13 @@
 package net.minecraft.src;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
-import java.util.Map.Entry;
-
-import javax.imageio.ImageIO;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 import net.minecraft.client.Minecraft;
 import MixxsAPI.*; 
 //import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 //import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 
 public class mod_MixxsAPI extends BaseMod {
@@ -55,8 +39,8 @@ public class mod_MixxsAPI extends BaseMod {
         entityList = new EntityCustomList();
         
     	itemAPI = new MixxsAPI_ItemAPI();
-        
-        
+
+
         //Try checking if supported mods that add other functions are enabled or not is on or not.
         checkAdditionalFunctionalityMods();
 
@@ -64,7 +48,6 @@ public class mod_MixxsAPI extends BaseMod {
     }
 
     private void checkAdditionalFunctionalityMods() {
-
     	//checkEspecificModsExistence("net.minecraft.src.overrideapi.OverrideAPI", "EnumToolMaterials", false);
     	checkEspecificModsExistence("overrideapi.OverrideAPI", "EnumToolMaterials");
     	//checkEspecificModsExistence("net.minecraft.src.DirtSwordLoader", "3D models using .obj");

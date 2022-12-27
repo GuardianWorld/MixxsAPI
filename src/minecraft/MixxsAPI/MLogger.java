@@ -1,22 +1,31 @@
 package MixxsAPI;
 
 public class MLogger {
-
-	public static final int NORMAL = 0;
-	public static final int WARNING = 1;
-	public static final int ERROR = 2;
-	
-	public static void print(String baseClass, String info, int errorType) {
+	public static void print(String baseClass, String info, ErrorType errorType) {
 		String base = "> ["+ baseClass +"]";
-		if(errorType == NORMAL) 	  { base = base.concat(": "); 		   }
-		else if(errorType == WARNING) { base = base.concat(" Warning: "); }
-		else if(errorType == ERROR)   {	base = base.concat(" Error: ");   }
-		
+
+		switch (errorType) {
+			case NORMAL:
+				base = base.concat(": ");
+				break;
+
+			case WARNING:
+				base = base.concat(" Warning: ");
+				break;
+
+			case ERROR:
+				base = base.concat(" Error: ");
+				break;
+		}
+
 		base = base.concat(info);
 		
-		if(errorType == ERROR) { System.err.println(base);}
+		if(errorType == ErrorType.ERROR) { System.err.println(base);}
 		else { System.out.println(base); }
 	}
 
+	enum ErrorType {
+		NORMAL, WARNING, ERROR
+	}
 }
 

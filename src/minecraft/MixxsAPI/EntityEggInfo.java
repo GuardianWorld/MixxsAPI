@@ -1,7 +1,6 @@
 package MixxsAPI;
 
-public class EntityEggInfo
-{
+public class EntityEggInfo {
     /** The entityID of the spawned mob */
     public int spawnedID;
 
@@ -11,8 +10,7 @@ public class EntityEggInfo
     /** Color of the egg spots */
     public int secondaryColor;
 
-    public EntityEggInfo(int id, int primaryColor, int secondaryColor)
-    {
+    public EntityEggInfo(int id, int primaryColor, int secondaryColor) {
         this.spawnedID = id;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
