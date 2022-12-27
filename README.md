@@ -28,7 +28,7 @@ Others       - N/A
   * Default Items
   * Food Items (With extra properties~)
   * SOUP with custom return items as well~
-  * Equipaments/Tools (Sword, Axe, Pickaxe, Shovel, Hoe) and a way of creating full equipament sets of a single material very easily.
+  * Equipment/Tools (Sword, Axe, Pickaxe, Shovel, Hoe) and a way of creating full equipment sets of a single material very easily.
   * Bows
   * Shears with custom pickable blocks (Uses a workaround to grab unobtainable items with silk-touch style.)
   * Armor, with a way of creating a full set as well all at once.
@@ -36,4 +36,4 @@ Others       - N/A
   * Block Placers (Same code as Flint And Steel really, just with a different sound!)
   * Block Replacers (Can replace almost all blocks with the one specified, you do lose the block you are replacing, but can be useful to fix buildings).
     
-    How to create everything is on the example itemAPI.txt file, modify it if you want to add a item of your own~
+    How to create everything is on the example itemAPI.txt file, modify it if you want to add an item of your own~
