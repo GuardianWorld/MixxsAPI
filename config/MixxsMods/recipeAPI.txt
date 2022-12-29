@@ -1,0 +1,67 @@
+###################################################################
+#																  #
+#			RecipeAPI Config, be careful touching here.           # 
+#	                                                              #
+###################################################################
+
+#For any non-default recipe, use those two bellow:
+
+DefaultRecipes = compactedCobble9
+ShapelessRecipes = 
+
+#The recipes bellow only support 2 materials.
+
+EquipmentSetRecipeList = glass
+SwordRecipeList = knife
+PickaxeRecipeList = 
+ShovelRecipeList = 
+AxeRecipeList = 
+HoeRecipeList =
+
+#The recipes bellow only support 1 material.
+
+ArmorSetRecipeList = aqua
+HelmetRecipeList =
+ChestRecipeList =
+LegsRecipeList =
+BootsRecipeList =
+
+#Default Recipes
+
+SetRecipe_compactedCobble9 = "xxx","xxx","xxx"
+SetCraftingMaterial_compactedCobble9_x = tile.cobblestone
+SetAmountCrafted_compactedCobble9 = 1
+SetItemDamage_compactedCobble9 = 0
+SetMaterialDamage_x = 0
+
+
+#ShapelessRecipes
+
+#Equipment Recipes
+EquipmentSetCraftingMaterial_glass = tile.glass
+EquipamentSetSecondaryMaterial_glass = item.stick
+
+#Sword Recipes
+SetFirstCraftingMaterial_knife = item.bucketLava
+SetSecondCraftingMaterial_knife = item.stick
+
+#Pickaxe Recipes
+
+#Shovel Recipes
+
+#Axe Recipes
+
+#Hoe Recipes
+
+#Armor Recipes
+ArmorSetCraftingMaterial_aqua = item.bucketWater
+
+#Helmet Recipes
+#SetFirstCraftingMaterial_helmet = tile.obsidian
+
+#Chest Recipes
+
+#Legs Recipes
+
+#Boots Recipes
+

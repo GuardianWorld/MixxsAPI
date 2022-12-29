@@ -1,62 +1,193 @@
 #
-#			LootAPI Config, be careful touching here.
+#			ItemAPI Config, be careful touching here.
 #	
-#		ItemList = Necessary for every item that will be added to be placed here, it will be used to call the rest.
-#		idItem"ItemListName": Will select the ItemID for said item.
-#		Texture"ItemListName": Will show the path for said item texture. (Its minecraft canonicalPath + /config) Per default the texture used is the PlaceHolder.
-#		Type"ItemListName": Will determine the type to be added. Currently we have:
-#		SetMaxStack"ItemListName": Will set the max stack size for said item. Only works for certain cases.
-#		SetName"ItemListName": To place the FULL name of the object.
-#		- Item (Resource)
-#		To do: - Pickaxe, Spade, Sword, Hoe, Food, Bucket, Door.
-#
 #		Another point to note, is that mods can use the ItemAPI to quickly add items (Just sending their own ConfigFile to the
-#		LootAPI and receiving the ItemTable).
+#		ItemAPI and receiving the ItemTable).
 #
 #		For now this is just a reference file;
+# OBS: Make custom Tools.java so i can grab other blocks like glass.
 #
+#ItemList = 
+#idItem_banana = 420
+#Texture_banana = /textures/banana.png
+#SetMaxStack_banana = 64
+#SetName_banana = Banana
 #
-#ItemList = banana,kiwi,knife
-#idItembanana = 420
-#Texturebanana = /textures/banana.png
-#Typebanana = Item
-#SetMaxStackbanana = 64
-#SetNamebanana = Banana
-#
+# Armor = (0, Leather) (1, Chainmail), (2, Iron), (3, Diamond), (4, Gold)
+# Gold has the the index 4 for rendering, but armor level of 1.
 
-ItemList = banana,kiwi,knife,helicoptero,noIDTest
-EnumList = glass
+
+#Materials
+MaterialList = glass
+ArmorLayerList = aqua
+
+#Default Items
+ItemList = helicoptero,compactedCobble9
+
+#Food Items:
+FoodList = banana,kiwi
+SoupList = soup
+
+#Equipaments
+FullEquipmentSetList = glass
+SwordList = knife
+PickaxeList = rock
+ShovelList = 
+AxeList = 
+HoeList = 
+
+#Bows.
+BowList = crossbow
+
+#Shears
+ShearList = iceshears
+
+#BlockPlacingItems
+FlintAndSteelList =
+BlockPlacerList = cobbleplacer,stoneplacer
+BlockReplacerList = ironreplacer
+
+#Armor
+ArmorLayerList = aqua
+ArmorSetList = aqua
+ArmorHelmetList =
+ArmorChestList =
+ArmorLegsList =
+ArmorBootsList =
+
+#Special Items
+BucketList =
+DoorList =
+SeedList =
+
 
 #Enum Materials
-MaterialSetHLevelglass = 0
-MaterialSetMUsesglass = 5
-MaterialSetEOPMglass = 0
-MaterialSetDVEglass = 5
+MaterialSetHarvestLevel_glass = 0
+MaterialSetMaxUses_glass = 5
+MaterialSetEfficiencyOnProperMaterial_glass = 1.5
+MaterialSetDamageVsEntity_glass = 2
 
-#Items
-idItembanana = 420
-Texturebanana = /textures/banana.png
-Typebanana = Food
-SetMaxStackbanana = 6
-FoodHealAmountbanana = 3
-SetNamebanana = Banana
+#Default Items
+idItem_helicoptero = 423
+Texture_helicoptero = /textures/helicoptero.png
+SetMaxStack_helicoptero = 1
+SetName_helicoptero = Helicoptero
 
-idItemkiwi = 421
-Texturekiwi = /textures/kiwi.png
-Typekiwi = Food
-SetMaxStackkiwi = 1
-FoodHealAmountkiwi = 4
-SetNamekiwi = Kiwi Fruit
+idItem_compactedCobble9 = 360
+Texture_compactedCobble9 = /textures/compactedCobble9.png
+SetMaxStack_compactedCobble9 = 64
+SetName_compactedCobble9 = Compacted Cobblestone
 
-idItemknife = 422
-Typeknife = Sword
-Textureknife = /textures/knife.png
-SetNameknife = Hell Knife
-SetMaxStackknife = 1
-ItemEnumTypeknife = glass
+#Food Items
+idItem_banana = 420
+Texture_banana = /textures/banana.png
+SetMaxStack_banana = 6
+FoodHealAmount_banana = 3
+SetName_banana = Banana
+FoodWolfFavorite_banana = false
 
-idItemhelicoptero = 423
-Texturehelicoptero = /textures/helicoptero.png
-Typehelicoptero = Item
-SetMaxStackhelicoptero = 1
-SetNamehelicoptero = Helicoptero
+idItem_kiwi = 421
+Texture_kiwi = /textures/kiwi.png
+SetMaxStack_kiwi = 1
+FoodHealAmount_kiwi = 4
+SetName_kiwi = Kiwi Fruit
+FoodWolfFavorite_kiwi = false
+
+#Soup Items
+idItem_soup = 700
+Texture_soup = /textures/soup.png
+#SetMaxStack_soup = 2 //Does not work for now, i can work later, but nah.
+FoodHealAmount_soup = 5
+SetName_soup = soup
+SetReturnItem_soup = item.banana
+FoodWolfFavorite_soup = true
+
+##Equipaments
+#Full sets
+idReservedToolSet_glass = 460
+SetEnumType_glass = glass
+TextureToolSet_glass = /textures/glass#.png
+SetName_glassSword = Glass Sword
+SetName_glassAxe = Glass Axe
+SetName_glassPickaxe = Glass Pickaxe
+SetName_glassHoe = Glass Hoe
+SetName_glassShovel = Glass Shovel
+
+#Sword Items
+idItem_knife = 450
+Texture_knife = /textures/knife.png
+SetName_knife = Knife
+ItemEnumType_knife = Diamond
+
+#Pickaxe Items
+idItem_rock = 451
+Texture_rock = /textures/NoTexture.png
+SetName_rock = rock pickaxe
+ItemEnumType_rock = stone
+
+#Axe Items
+
+#Shovel Items
+
+#Hoe Items
+
+#Bow Items
+idItem_crossbow = 699
+Texture_crossbow = /textures/crossbow.png
+SetName_crossbow = Crossbow
+SetAmmo_crossbow = tile.stone
+SetDurability_crossbow = 50
+
+#Shear Items
+idItem_iceshears = 888
+Texture_iceshears = /textures/iceshears.png
+SetName_iceshears = Ice Shears
+SetDurability_iceshears = 28
+SetHarvestBlocks_iceshears = ice,grass,tallgrass,deadbush,leaves
+
+#FlintAndSteel
+
+#BlockPlacer
+idItem_cobbleplacer = 1500
+Texture_cobbleplacer = /textures/cobbleplacer.png
+SetName_cobbleplacer = Cobblestone Placer
+SetDurability_cobbleplacer = 64
+SetBlock_cobbleplacer = cobblestone
+
+idItem_stoneplacer = 1501
+Texture_stoneplacer = /textures/cobbleplacer.png
+SetName_stoneplacer = Stone Placer
+SetDurability_stoneplacer = 64
+SetBlock_stoneplacer = stone
+
+#BlockReplacer
+idItem_ironreplacer = 1502
+Texture_ironreplacer = /textures/replacerWand.png
+SetName_ironreplacer = Iron Replacer
+SetDurability_ironreplacer = 64
+SetBlock_ironreplacer = blockIron
+SetForbiddenToReplace_ironreplacer = leaves,ice
+
+##Armor List
+
+#Full armor set
+idReservedArmorSet_aqua = 999
+TextureArmorSet_aqua = /textures/aqua#.png
+SetName_aquaHelmet = Aquatic Helmet
+SetName_aquaPlate = Aquatic Chestplate
+SetName_aquaLegs = Aquatic Leggings
+SetName_aquaBoots = Aquatic Boots
+SetDurability_aquaHelmet = -1
+RenderIndex_aqua = aqua
+ArmorLevel_aqua = 5
+
+
+
+#Helmet list
+
+#Chestplate list
+
+#Leggings list
+
+#Boots list
+
