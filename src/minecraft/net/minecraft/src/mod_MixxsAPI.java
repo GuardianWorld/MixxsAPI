@@ -6,9 +6,6 @@ import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
 import MixxsAPI.*; 
-//import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
-
-//import net.minecraft.src.overrideapi.utils.tool.ToolMaterial;
 
 public class mod_MixxsAPI extends BaseMod {
 	public static ArrayList<String> additionalFunctionalityMods;
@@ -18,6 +15,10 @@ public class mod_MixxsAPI extends BaseMod {
     
     //APIs
     MixxsAPI_ItemAPI itemAPI;
+    MixxsAPI_BlockAPI blockAPI;
+    MixxsAPI_RecipeAPI recipeAPI;
+    MixxsAPI_EntityAPI entityAPI;
+    MixxsAPI_LootTableAPI lootTableAPI;
 
     public mod_MixxsAPI(){
     	//Initializing itself
@@ -39,21 +40,24 @@ public class mod_MixxsAPI extends BaseMod {
         entityList = new EntityCustomList();
         
     	itemAPI = new MixxsAPI_ItemAPI();
+    	recipeAPI = new MixxsAPI_RecipeAPI();
 
 
         //Try checking if supported mods that add other functions are enabled or not is on or not.
         checkAdditionalFunctionalityMods();
-
+        
         itemAPI.ItemAPICalls("MixxsMods/itemAPI.txt", itemTable, null);
+        recipeAPI.RecipeAPICalls("MixxsMods/recipeAPI.txt");
     }
 
     private void checkAdditionalFunctionalityMods() {
     	//checkEspecificModsExistence("net.minecraft.src.overrideapi.OverrideAPI", "EnumToolMaterials", false);
-    	checkEspecificModsExistence("overrideapi.OverrideAPI", "EnumToolMaterials");
+    	checkModsExistence("overrideapi.OverrideAPI", "EnumToolMaterials");
+    	checkModsExistence("ItemNBT", ModLoader.isModLoaded("mod_ItemNBT"), ModLoader.isModLoaded("net.minecraft.src.mod_ItemNBT"), "NBT tags and custom description");
     	//checkEspecificModsExistence("net.minecraft.src.DirtSwordLoader", "3D models using .obj");
     }
     
-    private void checkEspecificModsExistence(String className, String functions) {
+    private void checkModsExistence(String className, String functions) {
     	try {
 			Class.forName(className, false, this.getClass().getClassLoader());
 			additionalFunctionalityMods.add(className); 
@@ -62,6 +66,18 @@ public class mod_MixxsAPI extends BaseMod {
 			additionalFunctionalityMods.add("NotFound");
 		}
     }
+    
+    private void checkModsExistence(String className, Boolean ModLoaderCheck1, Boolean ModLoaderCheck2, String functions) {
+    	if(!ModLoaderCheck1 && !ModLoaderCheck2) {
+    		System.err.println("> [MixxsAPI] Warning: Could not find class [" + className + "]. Some additional functions [" + functions + "] will not work");
+			additionalFunctionalityMods.add("NotFound");
+    	}
+    	else {
+    		additionalFunctionalityMods.add(className);
+    	}
+    }
+    
+    
     
     public String Version() {
 		return "Mixxs API v0.1 for Minecraft B1.7.3";
