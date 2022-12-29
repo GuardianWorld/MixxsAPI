@@ -67,9 +67,9 @@ public class Item_Builder {
     	return aux;
     }
     
-    public static Item ItemAPIBuildEquipament(String baseName, String fullName, int id, String texture, 
+    public static Item ItemAPIBuildEquipment(String baseName, String fullName, int id, String texture, 
     		String type, EnumToolMaterial enumTypeMaterial, Map<String, Integer> textureHashMap) {
-		MLogger.print("Item API", "Building Equipament " + baseName + ".", MLogger.ErrorType.NORMAL);
+		MLogger.print("Item API", "Building Equipment " + baseName + ".", MLogger.ErrorType.NORMAL);
     	Item aux = null;
     	
     	//Get an EmptyID;
