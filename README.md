@@ -7,7 +7,7 @@ So far done:
 
 MixxsAPI     - V0.1a (Proof of concept)
 
-ItemAPI      - V0.3a (Check bellow:)
+ItemAPI      - 30-50% complete (Check bellow:)
 
 RecipeAPI    - 80% Complete (Works very well for crafting table recipes, lacks furnace recipes and probably has some minor bugs)
 
