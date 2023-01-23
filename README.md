@@ -9,7 +9,7 @@ MixxsAPI     - V0.1a (Proof of concept)
 
 ItemAPI      - V0.2a (Check bellow:)
 
-RecipeAPI    - N/A
+RecipeAPI    - v1 (Works very well for crafting table recipes, lacks furnace recipes and probably has some minor bugs)
 
 LootTableAPI - N/A
 
@@ -37,3 +37,6 @@ Others       - N/A
   * Block Replacers (Can replace almost all blocks with the one specified, you do lose the block you are replacing, but can be useful to fix buildings).
     
     How to create everything is on the example itemAPI.txt file, modify it if you want to add an item of your own~
+
+## RecipeAPI:
+  Implement ANY Recipe the way you want! Supports recipes made by hand (Default and Shapeless recipes) and simpler but already pre-made recipes (tools 2 materials and armor 1 material).
