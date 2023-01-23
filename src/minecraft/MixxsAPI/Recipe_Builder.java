@@ -22,8 +22,8 @@ public class Recipe_Builder {
 	 * @param connectionMap The connection that is formed between an character (x) -> ItemStack (Dye for example)
 	 * @param isShapeless If the recipe is shapeless or not
 	 */
-	public static void buildNormalRecipe(Item toBeCrafted, int amount, int itemDamage, String[] recipeFormat, char[] characterMap,
-			Map<Character, ItemStack> connectionMap, boolean isShapeless) {
+	public static void buildNormalRecipe(Item toBeCrafted, int amount, int itemDamage, String[] recipeFormat, char[] characterMap, 
+		Map<Character, ItemStack> connectionMap) {
 				
 		if(recipeFormat == null) {
 			return;
@@ -41,32 +41,51 @@ public class Recipe_Builder {
 		MLogger.print("Recipe API", "Building Recipe for Item " + toBeCrafted.getItemName() + ".", MLogger.ErrorType.NORMAL);
 		//System.err.println(recipeSizeColumn + "|" + recipeSizeLine);
 		
-		if(recipeSizeColumn == 1 && recipeSizeLine == 1) 	 add1x1Recipe(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-		if(!isShapeless) {
-			if(recipeSizeColumn == 1 && recipeSizeLine == 2) add1x2RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-			if(recipeSizeColumn == 1 && recipeSizeLine == 3) add1x3RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-			if(recipeSizeColumn == 2 && recipeSizeLine == 1) add2x1RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-			if(recipeSizeColumn == 2 && recipeSizeLine == 2) add2x2RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-			if(recipeSizeColumn == 2 && recipeSizeLine == 3) add2x3RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-			if(recipeSizeColumn == 3 && recipeSizeLine == 1) add3x1RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-			if(recipeSizeColumn == 3 && recipeSizeLine == 2) add3x2RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
-			if(recipeSizeColumn == 3 && recipeSizeLine == 3) add3x3RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);			
-		}
 		
+		if(recipeSizeColumn == 1 && recipeSizeLine == 1) add1x1RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 1 && recipeSizeLine == 2) add1x2RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 1 && recipeSizeLine == 3) add1x3RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 2 && recipeSizeLine == 1) add2x1RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 2 && recipeSizeLine == 2) add2x2RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 2 && recipeSizeLine == 3) add2x3RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 3 && recipeSizeLine == 1) add3x1RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 3 && recipeSizeLine == 2) add3x2RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);
+		else if(recipeSizeColumn == 3 && recipeSizeLine == 3) add3x3RecipeDefault(toBeCrafted, amount, itemDamage, recipeFormat, characterMap, connectionMap);	
+		
+	}
+	
+	public static void buildShapelessRecipe(Item toBeCrafted, int amount, int itemDamage, ItemStack[] materialsMap) {
+		
+		MLogger.print("Recipe API", "Building Shapeless Recipe for Item " + toBeCrafted.getItemName() + ".", MLogger.ErrorType.NORMAL);
+		if(materialsMap == null || materialsMap.length == 0) {
+			System.err.println("Cannot build " + toBeCrafted.getItemName() + " Invalid Materials");
+			return;
+		}		
+		addShapelessRecipe(toBeCrafted, amount, itemDamage, materialsMap);	
 	}
 	
 	//1x1
 	
-	private static void add1x1Recipe(Item toBeCrafted , int amount, int subItem, String[] recipeFormat, 
-			char[] charactersInRecipe, Map<Character, ItemStack> connectionMap) {	
+	
+	
+	private static void addShapelessRecipe(Item toBeCrafted , int amount, int subItem, Object[] materialsMap) {	
+		
 		ModLoader.AddShapelessRecipe(
+				new ItemStack(toBeCrafted, amount, subItem),
+				materialsMap);
+				
+	}
+	
+	//2x2
+
+	private static void add1x1RecipeDefault(Item toBeCrafted , int amount, int subItem, String[] recipeFormat, 
+			char[] charactersInRecipe, Map<Character, ItemStack> connectionMap) {
+		ModLoader.AddRecipe(
 				new ItemStack(toBeCrafted, amount, subItem),
 				recipeFormat[0],
 				charactersInRecipe[0], connectionMap.get(charactersInRecipe[0]));
 	}
 	
-	//2x2
-
 	private static void add1x2RecipeDefault(Item toBeCrafted , int amount, int subItem, String[] recipeFormat, 
 			char[] charactersInRecipe, Map<Character, ItemStack> connectionMap) {
 		

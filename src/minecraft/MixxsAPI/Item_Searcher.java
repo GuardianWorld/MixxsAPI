@@ -26,14 +26,21 @@ public class Item_Searcher {
     	String itemName = itemSearched;
     	String blockName = itemSearched;
     	
-    	if(!itemSearched.toLowerCase().contains("item")) {
-    		itemName = "item." + itemSearched;
-    	}
-    	if(!itemSearched.toLowerCase().contains("tile")) {
+    	if(itemSearched.toLowerCase().contains("block.")) {
+    		blockName = itemSearched.replace("block.", "tile.");
+    	} 
+    	else if(!itemSearched.toLowerCase().contains("tile.")) {
     		blockName = "tile." + itemSearched;
     	}
+
+    	if(!itemSearched.toLowerCase().contains("item.")) {
+    		itemName = "item." + itemSearched;
+    	}
+    	
+    	//System.err.println(blockName + "|" + itemName);
     	
     	blockName = convertNomeclature(blockName);
+    	itemName = convertNomeclature(itemName);
 
     	for(int x = 1; x < Item.itemsList.length; x++) {  			
     		if(Item.itemsList[x] != null && Item.itemsList[x].getItemName() != null) {
@@ -44,7 +51,7 @@ public class Item_Searcher {
     			}
     		}		
     	}
-    	    	
+    	  
 		return null;  	
     	
     }
@@ -52,6 +59,18 @@ public class Item_Searcher {
     public static String convertNomeclature(String name) {
     	if(name.equals("tile.cobblestone")) {
     		return "tile.stonebrick";
+    	}
+    	if(name.equals("item.emptyBowl")) {
+    		return Item.bowlEmpty.getItemName();
+    	}
+    	if(name.equals("item.soupBowl")) {
+    		return Item.bowlSoup.getItemName();
+    	}
+    	if(name.equals("item.bucketMilk")) {
+    		return Item.bucketMilk.getItemName();
+    	}
+    	if(name.equals("item.diamond")) {
+    		return Item.diamond.getItemName();
     	}
     	
     	return name;

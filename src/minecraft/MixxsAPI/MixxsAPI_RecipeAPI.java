@@ -27,6 +27,7 @@ public class MixxsAPI_RecipeAPI {
     private final String I_SetCraftingMaterial1             = "SetFirstCraftingMaterial_";
     private final String I_SetCraftingMaterial2             = "SetSecondCraftingMaterial_";
     
+    private final String I_SetCraftingMaterials				= "SetCraftingMaterials_";  
     
     private final String I_SetRecipe					   = "SetRecipe_";
     private final String I_SetCraftingMaterial             = "SetCraftingMaterial_";
@@ -93,7 +94,9 @@ public class MixxsAPI_RecipeAPI {
     	return true;
     }
     
-    private void addDefaultRecipe(String[] splitList) {
+    @SuppressWarnings("unused")
+	private void addDefaultRecipe(String[] splitList) {
+		outerloop:
     	for(String itemName : splitList) {
     		Item aux = Item_Searcher.TryGettingItem(itemName, null);
     		if(aux != null) {
@@ -102,20 +105,29 @@ public class MixxsAPI_RecipeAPI {
     			
     			Map<Character, ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     			
-    			int recipeDamage = a_calls.TryGettingValues(I_SetItemDamage + itemName, 0);
+    			int recipeDamage = a_calls.TryGettingValuesNoError(I_SetItemDamage + itemName, 0);
     			
     			for(char c : lettersInRecipe) {
     				String materialstring = inputFormatException.getProperty(I_SetCraftingMaterial + itemName + "_" + c, "");
     				if(!materialstring.isEmpty()) {
+    					
     					Item auxMaterial = Item_Searcher.TryGettingItem(materialstring);
-    					int materialDamage = a_calls.TryGettingValuesNoError(I_SetMaterialDamage + c, 0);
-    					Recipe_Builder.makeConnectionMap(c, auxMaterial, materialDamage, connectionMap);
+    					int materialDamage = a_calls.TryGettingValuesNoError(I_SetMaterialDamage + itemName + "_" + c, 0);
+    					
+    					if(auxMaterial != null) {
+    						Recipe_Builder.makeConnectionMap(c, auxMaterial, materialDamage, connectionMap);
+    					}
+    					else {
+    						MLogger.print("RecipeAPI", "Invalid auxMaterial" + materialstring + " On recipe "+ itemName, MLogger.ErrorType.ERROR);
+    						continue outerloop;
+    					}
+
     				}    				
     			}
     			
     			int craftedAmount = a_calls.TryGettingValuesNoError(I_SetAmountCrafted + itemName, 1);
     			
-    			Recipe_Builder.buildNormalRecipe(aux, craftedAmount, recipeDamage, craftingGrid, lettersInRecipe, connectionMap, false);
+    			Recipe_Builder.buildNormalRecipe(aux, craftedAmount, recipeDamage, craftingGrid, lettersInRecipe, connectionMap);
     			
     			//public static void buildNormalRecipe(Item toBeCrafted, int amount, int itemDamage, String[] recipeFormat, char[] characterMap,
     			//Map<Character, ItemStack> connectionMap, boolean isShapeless)
@@ -125,7 +137,33 @@ public class MixxsAPI_RecipeAPI {
     }
     
     private void addShapelessRecipe(String[] splitList) {
-    	
+    	for(String itemName : splitList) {
+    		Item aux = Item_Searcher.TryGettingItem(itemName, null);
+    		if(aux != null) {
+    			String[] craftingMaterials = inputFormatException.getProperty(I_SetCraftingMaterials + itemName, "").split(",");
+    			
+    			int recipeDamage = a_calls.TryGettingValuesNoError(I_SetItemDamage + itemName, 0);
+    			int craftedAmount = a_calls.TryGettingValuesNoError(I_SetAmountCrafted + itemName, 1);
+    		
+    			ArrayList<Item> materials = new ArrayList<>();
+    		
+    		
+    			for(String s : craftingMaterials) {
+    				Item aux2 = Item_Searcher.TryGettingItem(s);
+    				if(aux2 != null) {
+    					materials.add(aux2);
+    				}
+    			}
+    		
+    			ItemStack[] itemArray = new ItemStack[materials.size()];
+    		
+    			for(int x = 0; x < materials.size(); x++) {	
+    				itemArray[x] = new ItemStack(materials.get(x), 1, a_calls.TryGettingValuesNoError(I_SetMaterialDamage + itemName + "_" + x, 0));
+    			}
+    		
+    			Recipe_Builder.buildShapelessRecipe(aux, craftedAmount, recipeDamage, itemArray);
+    		}
+    	}
     }
     
     private void addEquipmentSetRecipe(String[] splitList) {
@@ -188,7 +226,7 @@ public class MixxsAPI_RecipeAPI {
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
     	connectionMap.put(characterMap[1], new ItemStack(secondaryMaterial, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     private void addPickaxeRecipe(String[] splitList) {
@@ -224,7 +262,7 @@ public class MixxsAPI_RecipeAPI {
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
     	connectionMap.put(characterMap[1], new ItemStack(secondaryMaterial, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     private void addShovelRecipe(String[] splitList) {
@@ -260,7 +298,7 @@ public class MixxsAPI_RecipeAPI {
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
     	connectionMap.put(characterMap[1], new ItemStack(secondaryMaterial, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     private void addAxeRecipe(String[] splitList) {
@@ -296,7 +334,7 @@ public class MixxsAPI_RecipeAPI {
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
     	connectionMap.put(characterMap[1], new ItemStack(secondaryMaterial, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     private void addHoeRecipe(String[] splitList) {
@@ -332,7 +370,7 @@ public class MixxsAPI_RecipeAPI {
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
     	connectionMap.put(characterMap[1], new ItemStack(secondaryMaterial, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     private void addArmorSetRecipe(String[] splitList) {
@@ -388,7 +426,7 @@ public class MixxsAPI_RecipeAPI {
     	char[] characterMap = {'x'};
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     
@@ -422,7 +460,7 @@ public class MixxsAPI_RecipeAPI {
     	char[] characterMap = {'x'};
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     private void addLeggingsRecipe(String[] splitList) {
@@ -455,7 +493,7 @@ public class MixxsAPI_RecipeAPI {
     	char[] characterMap = {'x'};
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
     private void addBootsRecipe(String[] splitList) {
@@ -488,7 +526,7 @@ public class MixxsAPI_RecipeAPI {
     	char[] characterMap = {'x'};
     	Map<Character,ItemStack> connectionMap = new HashMap<Character, ItemStack>();
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
-    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap, false);
+    	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
     
 }
