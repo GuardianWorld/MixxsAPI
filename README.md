@@ -39,4 +39,5 @@ Others       - N/A
     How to create everything is on the example itemAPI.txt file, modify it if you want to add an item of your own~
 
 ## RecipeAPI:
-  Implement ANY Recipe the way you want! Supports recipes made by hand (Default and Shapeless recipes) and simpler but already pre-made recipes (tools 2 materials and armor 1 material).
+ * Implement ANY Recipe the way you want! Supports recipes made by hand (Default and Shapeless recipes).
+* Simpler but already pre-made recipes (tools 2 materials and armor 1 material).
