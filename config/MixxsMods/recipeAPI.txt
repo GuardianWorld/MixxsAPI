@@ -6,8 +6,8 @@
 
 #For any non-default recipe, use those two bellow:
 
-DefaultRecipes = compactedCobble9
-ShapelessRecipes = 
+DefaultRecipes = ironreplacer,compactedCobble9,compactedStone9,cobbleplacer,stoneplacer
+ShapelessRecipes = soup
 
 #The recipes bellow only support 2 materials.
 
@@ -32,10 +32,31 @@ SetRecipe_compactedCobble9 = "xxx","xxx","xxx"
 SetCraftingMaterial_compactedCobble9_x = tile.cobblestone
 SetAmountCrafted_compactedCobble9 = 1
 SetItemDamage_compactedCobble9 = 0
-SetMaterialDamage_x = 0
+SetMaterialDamage_compactedCobble9_x = 0
+
+SetRecipe_compactedStone9 = "xxx","xxx","xxx"
+SetCraftingMaterial_compactedStone9_x = tile.stone
+SetAmountCrafted_compactedStone9 = 1
+SetItemDamage_compactedStone9 = 0
+
+SetRecipe_cobbleplacer = "xxx","xyx","xxx"
+SetCraftingMaterial_cobbleplacer_x = compactedCobble9
+SetCraftingMaterial_cobbleplacer_y = item.stick
+SetAmountCrafted_cobbleplacer = 1
+
+SetRecipe_stoneplacer = "xxx","xyx","xxx"
+SetCraftingMaterial_stoneplacer_x = compactedStone9
+SetCraftingMaterial_stoneplacer_y = item.stick
+SetAmountCrafted_stoneplacer = 1
+
+SetRecipe_ironreplacer = "xxx","xyx","xxx"
+SetCraftingMaterial_ironreplacer_x = tile.blockIron
+SetCraftingMaterial_ironreplacer_y = item.diamond
 
 
 #ShapelessRecipes
+SetCraftingMaterials_soup = item.emptyBowl,item.soupBowl,item.bucketMilk
+
 
 #Equipment Recipes
 EquipmentSetCraftingMaterial_glass = tile.glass

@@ -22,7 +22,7 @@ MaterialList = glass
 ArmorLayerList = aqua
 
 #Default Items
-ItemList = helicoptero,compactedCobble9
+ItemList = helicoptero,compactedCobble9,compactedStone9
 
 #Food Items:
 FoodList = banana,kiwi
@@ -77,6 +77,11 @@ idItem_compactedCobble9 = 360
 Texture_compactedCobble9 = /textures/compactedCobble9.png
 SetMaxStack_compactedCobble9 = 64
 SetName_compactedCobble9 = Compacted Cobblestone
+
+idItem_compactedStone9 = 361
+Texture_compactedStone9 = /textures/compactedStone9.png
+SetMaxStack_compactedStone9 = 64
+SetName_compactedStone9 = Compacted Stone
 
 #Food Items
 idItem_banana = 420
