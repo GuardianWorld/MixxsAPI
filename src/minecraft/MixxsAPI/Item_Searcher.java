@@ -56,6 +56,40 @@ public class Item_Searcher {
     	
     }
     
+    public static int TryGettingItemID(String itemSearched) {
+    	String itemName = itemSearched;
+    	String blockName = itemSearched;
+    	
+    	if(itemSearched.toLowerCase().contains("block.")) {
+    		blockName = itemSearched.replace("block.", "tile.");
+    	} 
+    	else if(!itemSearched.toLowerCase().contains("tile.")) {
+    		blockName = "tile." + itemSearched;
+    	}
+
+    	if(!itemSearched.toLowerCase().contains("item.")) {
+    		itemName = "item." + itemSearched;
+    	}
+    	
+    	//System.err.println(blockName + "|" + itemName);
+    	
+    	blockName = convertNomeclature(blockName);
+    	itemName = convertNomeclature(itemName);
+
+    	for(int x = 1; x < Item.itemsList.length; x++) {  			
+    		if(Item.itemsList[x] != null && Item.itemsList[x].getItemName() != null) {
+    			String itemListItemName = Item.itemsList[x].getItemName();
+
+    			if(itemListItemName.equals(itemName) || itemListItemName.equals(blockName)) {
+    				return x;
+    			}
+    		}		
+    	}
+    	  
+		return 0;  	
+    	
+    }
+    
     public static String convertNomeclature(String name) {
     	if(name.equals("tile.cobblestone")) {
     		return "tile.stonebrick";
@@ -77,3 +111,6 @@ public class Item_Searcher {
     }
     
 }
+
+
+

@@ -37,6 +37,8 @@ public class MixxsAPI_RecipeAPI {
     
     private final String I_ArmorSetCraftingMaterial         = "ArmorSetCraftingMaterial_";
     
+    private final String I_SetSmeltingMaterial				= "SetSmeltingMaterial_";
+    
     
     Auxiliary_Calls a_calls;
     
@@ -74,6 +76,7 @@ public class MixxsAPI_RecipeAPI {
     	String legsRecipeList = inputFormatException.getProperty("LegsRecipeList", "");
     	String bootsRecipeList = inputFormatException.getProperty("BootsRecipeList", "");
     	
+    	String furnaceRecipeList = inputFormatException.getProperty("FurnaceRecipes", "");
     	
     	if(!defaultRecipes.isEmpty()) 			addDefaultRecipe(defaultRecipes.split(","));
     	if(!shapelessRecipes.isEmpty()) 		addShapelessRecipe(shapelessRecipes.split(","));
@@ -90,6 +93,8 @@ public class MixxsAPI_RecipeAPI {
     	if(!chestRecipeList.isEmpty()) 			addChestplateRecipe(chestRecipeList.split(","));
     	if(!legsRecipeList.isEmpty()) 			addLeggingsRecipe(legsRecipeList.split(","));
     	if(!bootsRecipeList.isEmpty()) 			addBootsRecipe(bootsRecipeList.split(","));
+    	
+    	if(!furnaceRecipeList.isEmpty())		addFurnaceRecipe(furnaceRecipeList.split(","));
     	
     	return true;
     }
@@ -162,6 +167,29 @@ public class MixxsAPI_RecipeAPI {
     			}
     		
     			Recipe_Builder.buildShapelessRecipe(aux, craftedAmount, recipeDamage, itemArray);
+    		}
+    	}
+    }
+    
+    private void addFurnaceRecipe(String[] splitList) {
+    	for(String itemName : splitList) {
+    		Item aux = Item_Searcher.TryGettingItem(itemName, null);
+    		if(aux != null) {
+    			String smeltingMaterials = inputFormatException.getProperty(I_SetSmeltingMaterial + itemName, null);
+    			if(smeltingMaterials == null) {
+    				continue;
+    			}
+    			
+    			int aux2 = Item_Searcher.TryGettingItemID(smeltingMaterials);
+    			if(aux2 == 0) {
+    				continue;
+    			}
+
+    			int recipeDamage = a_calls.TryGettingValuesNoError(I_SetItemDamage + itemName, 0);
+    			int craftedAmount = a_calls.TryGettingValuesNoError(I_SetAmountCrafted + itemName, 1);
+    			
+    			Recipe_Builder.buildFurnaceRecipe(aux2, aux, craftedAmount, recipeDamage);  		
+    			
     		}
     	}
     }
@@ -428,8 +456,7 @@ public class MixxsAPI_RecipeAPI {
     	connectionMap.put(characterMap[0], new ItemStack(material, 1, 0));
     	Recipe_Builder.buildNormalRecipe(wantedItem, 1, 0, recipeFormat, characterMap, connectionMap);
     }
-    
-    
+       
     private void addChestplateRecipe(String[] splitList) {
     	for(String itemName : splitList) {
     		String material = inputFormatException.getProperty(I_SetCraftingMaterial1 + itemName, "");

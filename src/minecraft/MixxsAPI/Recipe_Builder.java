@@ -64,6 +64,18 @@ public class Recipe_Builder {
 		addShapelessRecipe(toBeCrafted, amount, itemDamage, materialsMap);	
 	}
 	
+	public static void buildFurnaceRecipe(int resourceID, Item toBeCrafted, int amount, int itemDamage) {
+		MLogger.print("Recipe API", "Building Furnace Recipe for Item " + toBeCrafted.getItemName() + ".", MLogger.ErrorType.NORMAL);
+		if(resourceID != 0 && toBeCrafted != null) {
+			addFurnaceRecipe(resourceID, toBeCrafted, amount, itemDamage);
+		}
+	}
+	
+	private static void addFurnaceRecipe(int resource, Item toBeCrafted, int amount, int subItem) {
+		ModLoader.AddSmelting(resource, new ItemStack(toBeCrafted, amount, subItem));
+	}
+	
+	
 	//1x1
 	
 	
